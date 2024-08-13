@@ -2,7 +2,7 @@ import sweetbean
 
 from sweetbean.parameter import TimelineVariable
 from sweetbean.sequence import Block, Experiment
-from sweetbean.stimulus import TextStimulus, BlankStimulus, FeedbackStimulus, RandomDotPatternsStimulus
+from sweetbean.stimulus import TextStimulus, BlankStimulus, FeedbackStimulus, RandomDotPatternsStimulus, RandomObjectKinematogramStimulus
 
 
 def stimulus_sequence(timeline, coherence_ratio, motion_direction):
@@ -36,12 +36,13 @@ def stimulus_sequence(timeline, coherence_ratio, motion_direction):
     coherence_ratio = TimelineVariable("coherence_ratio", [])
     motion_direction = TimelineVariable("motion_direction", [])
 
-    rdp = RandomDotPatternsStimulus(
+    rdp = RandomObjectKinematogramStimulus(
         duration=75,
         number_of_oobs=20,
         number_of_apertures=1,
-        #coherence_movement=coherence_ratio,
-        #movement_speed=14.2
+        coherence_movement=coherence_ratio,
+        coherent_movement_direction=motion_direction,
+        movement_speed=14.2,
         oob_color="white",
         background_color="black"
     )
@@ -69,7 +70,7 @@ def stimulus_sequence(timeline, coherence_ratio, motion_direction):
     experiment = Experiment(block_list)
 
     # return a js string to transfer experiment to autora
-    #return experiment.to_js_string(as_function=True, is_async=True)
+    return experiment.to_js_string(as_function=True, is_async=True)
 
 
 '''
