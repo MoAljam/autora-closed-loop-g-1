@@ -5,7 +5,7 @@ from sweetbean.sequence import Block, Experiment
 from sweetbean.stimulus import TextStimulus, BlankStimulus, FeedbackStimulus, RandomDotPatternsStimulus
 
 
-def stimulus_sequence(timeline, coherence_ratio, coherence_direction):
+def stimulus_sequence(timeline, coherence_ratio, motion_direction):
     # introduction TODO write introduction
     introduction = TextStimulus(text='Welcome to this experiment!<br>...<br>Press SPACE to continue.', choices=[" "])
 
@@ -34,7 +34,7 @@ def stimulus_sequence(timeline, coherence_ratio, coherence_direction):
     # timeline variables
     # independent variables
     coherence_ratio = TimelineVariable("coherence_ratio", [])
-    coherence_direction = TimelineVariable("coherence_direction", [])
+    motion_direction = TimelineVariable("motion_direction", [])
 
     rdp = RandomDotPatternsStimulus(
         duration=75,
