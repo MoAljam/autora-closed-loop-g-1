@@ -178,6 +178,7 @@ class Experiment:
 
     def to_html(self, path):
         html = HTML_PREAMBLE
+        print(html)
         blocks = 0
         for b in self.blocks:
             if b.timeline and isinstance(b.timeline, Timeline):
