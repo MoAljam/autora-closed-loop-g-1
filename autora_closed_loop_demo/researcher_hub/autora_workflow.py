@@ -20,7 +20,7 @@ from sweetbean.sequence import Block, Experiment
 from sweetbean.stimulus import TextStimulus
 
 from trial_sequence import trial_sequences
-from stimulus_sequence import stimulus_sequence
+from stimulus_sequence import   
 
 # *** Set up variables *** #
 # independent variable is coherence in percent (0 - 100)
