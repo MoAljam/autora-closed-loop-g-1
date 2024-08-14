@@ -107,6 +107,8 @@ class rdp_rsvp_stimulus(Stimulus):
         coherence_movement: IntTypeL = 100,
         coherence_orientation: IntTypeL = 100,
         movement_speed: IntTypeL = 2,
+        aperture_width: IntTypeL = 200,
+        aperture_height: IntTypeL = 200,
         aperture_position_left: IntTypeL = 50,
         aperture_position_top: IntTypeL = 50,
         oob_color: StringTypeL = "white",
@@ -145,6 +147,8 @@ class rdp_rsvp_stimulus(Stimulus):
         self._set_param_full("oob_color")
         self._set_param_full("background_color")
         self._set_param_full("movement_speed")
+        self._set_param_full("aperture_width")
+        self._set_param_full("aperture_height")
         self._set_param_full("aperture_position_left")
         self._set_param_full("aperture_position_top")
         self._set_param_full("correct_choice")
