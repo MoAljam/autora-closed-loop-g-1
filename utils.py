@@ -10,7 +10,7 @@ from sweetbean.parameter import (
 )
 
 from sweetbean.stimulus import Stimulus
-from sweetbean.sequence import Block
+from sweetbean.sequence import Block, Timeline
 from sweetbean.parameter import CodeVariable
 from sweetbean.stimulus import StimulusVar, TimelineVariable
 from sweetbean.update_package_honeycomb import get_import, update_package
@@ -107,12 +107,12 @@ class rdp_rsvp_stimulus(Stimulus):
         coherence_movement: IntTypeL = 100,
         coherence_orientation: IntTypeL = 100,
         movement_speed: IntTypeL = 2,
-        aperture_width: IntTypeL = 200,
-        aperture_height: IntTypeL = 2   00,
+        aperture_width: IntTypeL = 300,
+        aperture_height: IntTypeL = 300,
         aperture_position_left: IntTypeL = 50,
         aperture_position_top: IntTypeL = 50,
         aperture_shape: IntTypeL = 1,
-        fade_out: IntTypeL = 1,
+        fade_out: IntTypeL = 0,
         oob_color: StringTypeL = "white",
         background_color: StringType = "grey",
         stimulus_type: IntTypeL = 0,
