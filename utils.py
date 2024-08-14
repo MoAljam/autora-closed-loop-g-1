@@ -96,6 +96,7 @@ class rdp_rsvp_stimulus(Stimulus):
     """
     using kinetogram and textvisual stimulus
     """
+
     def __init__(
         self,
         duration: Union[None, int, TimelineVariable, DerivedParameter] = None,
@@ -153,7 +154,7 @@ class rdp_rsvp_stimulus(Stimulus):
         self.text_trial += "return [correct_key] },"
 
     def _correct_to_psych(self):
-        if "correct_key" in self.arg:   
+        if "correct_key" in self.arg:
             self._set_data_text("correct_key")
             self.text_data += self._set_set_variable("correct")
             self.text_data += 'data["bean_correct"] = data["correct"]'
