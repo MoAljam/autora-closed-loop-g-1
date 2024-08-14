@@ -12,7 +12,7 @@ from sweetbean.parameter import (
 from sweetbean.stimulus import Stimulus
 from sweetbean.sequence import Block, Timeline
 from sweetbean.parameter import CodeVariable
-from sweetbean.stimulus import StimulusVar, TimelineVariable
+from sweetbean.stimulus import StimulusVar, TimelineVariable, SurveyStimulus
 from sweetbean.update_package_honeycomb import get_import, update_package
 
 StringType = Union[None, str, DerivedParameter, TimelineVariable]
@@ -90,6 +90,30 @@ def TEXT_APPENDIX(is_async):
     if is_async:
         async_string = "await "
     return f"{async_string}jsPsych.run(trials)\n"
+
+class text_survey_stimulus(SurveyStimulus):
+    def __init__(self,
+                 prompts=[],
+                 placeholder: StringTypeL="0",
+                 size: IntTypeL=1):
+        type = "jsPsychSurveyText"
+        super().__init__(locals())
+
+    def _stimulus_to_psych(self):
+        self.text_trial += self._set_param_js_preamble("questions")
+        self.text_trial += self._set_set_variable("prompts")
+        self.text_trial += "\nlet prompts_ = []"
+        self.text_trial += (
+            f'\nfor (const p of {self._set_get_variable("prompts")})' + "{"
+        )
+        self.text_trial += "\nprompts_.push({'prompt': p,"
+        self.text_trial += " 'placeholder': "
+        self.text_trial += {self._set_get_variable("placeholder")}
+        self.text_trial += " 'size': "
+        self.text_trial += {self._set_get_variable("size")}
+        self.text_trial += " })}"
+        self.text_trial += "return prompts_},"
+        self._set_data_text("prompts")
 
 
 class rdp_rsvp_stimulus(Stimulus):
