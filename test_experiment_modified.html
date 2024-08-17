@@ -1,478 +1,2003 @@
 <!DOCTYPE html>
-
 <head>
-    <title>My awesome experiment</title>
-    <script src="https://unpkg.com/jspsych@7.3.1"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.2"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.2"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@1.1.2"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.2"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.2"></script>
-    <link href="https://unpkg.com/jspsych@7.3.1/css/jspsych.css" rel="stylesheet" type="text/css" />
-    <script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response@1.1.2"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-video-keyboard-response@1.1.2"></script>
-    <script src="https://unpkg.com/@jspsych-contrib/plugin-rok@1.1.1"></script>
-    <style>
-        body {
-            background: #000;
-            color: #fff;
-        }
-
-        div {
-            font-size: 36pt;
-            line-height: 40pt
-        }
-
-        .sweetbean-square {
-            width: 10vw;
-            height: 10vw
-        }
-
-        .sweetbean-circle {
-            width: 10vw;
-            height: 10vw;
-            border-radius: 50%
-        }
-
-        .sweetbean-triangle {
-            width: 10vw;
-            height: 10vw;
-            clip-path: polygon(50% 0, 0 100%, 100% 100%)
-        }
-
-        .feedback-screen-red {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100vw;
-            height: 100vh;
-            background: red
-        }
-
-        .feedback-screen-green {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100vw;
-            height: 100vh;
-            background: green
-        }
-    </style>
+<title>My awesome experiment</title><script src="https://unpkg.com/jspsych@7.3.1"></script>
+<script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.2"></script>
+<script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.2"></script>
+<script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@1.1.2"></script>
+<script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.2"></script>
+<script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.2"></script>
+<link href="https://unpkg.com/jspsych@7.3.1/css/jspsych.css" rel="stylesheet" type="text/css"/>
+<script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response@1.1.2"></script>
+<script src="https://unpkg.com/@jspsych/plugin-video-keyboard-response@1.1.2"></script>
+<script src="./index.browser.min.js"></script><style>body {background: #000; color: #fff;}
+div {font-size:36pt; line-height:40pt}.sweetbean-square {width:10vw; height:10vw}.sweetbean-circle {width:10vw; height:10vw; border-radius:50%}.sweetbean-triangle {width:10vw; height:10vw; clip-path:polygon(50% 0, 0 100%, 100% 100%)}.feedback-screen-red {position:absolute; left:0; top:0; width:100vw; height: 100vh; background: red}.feedback-screen-green {position:absolute; left:0; top: 0; width:100vw; height: 100vh; background: green}</style>
 </head>
-
 <body></body>
 <script>
-    jsPsych = initJsPsych();
-    trials = [
-            { timeline: [
-                    { type: jsPsychHtmlKeyboardResponse, stimulus: () => { let text = "Welcome to this experiment!<br>...<br>Press SPACE to continue."; let color = "white"; return "<div style='color: " + color + "'>" + text + "</div>"
-                        }, choices: () => { let choices = [
-                                " ",
-                            ]; return choices
-                        }, on_finish: (data) => { data[
-                                "bean_type"
-                            ] = 'jsPsychHtmlKeyboardResponse'; let text = "Welcome to this experiment!<br>...<br>Press SPACE to continue."; data[
-                                "bean_text"
-                            ] = text; let color = "white"; data[
-                                "bean_color"
-                            ] = color; let choices = [
-                                " ",
-                            ]; data[
-                                "bean_choices"
-                            ] = choices; let correct_key = ""; data[
-                                "bean_correct_key"
-                            ] = correct_key; data[
-                                "bean_correct"
-                            ] = correct_key == data[
-                                "response"
-                            ]
-                        }
-                    }
-                ], timeline_variables: []
-            },
-            { timeline: [
-                    { type: jsPsychHtmlKeyboardResponse, stimulus: () => { let text = "... Press SPACE to continue."; let color = "white"; return "<div style='color: " + color + "'>" + text + "</div>"
-                        }, choices: () => { let choices = [
-                                " ",
-                            ]; return choices
-                        }, on_finish: (data) => { data[
-                                "bean_type"
-                            ] = 'jsPsychHtmlKeyboardResponse'; let text = "... Press SPACE to continue."; data[
-                                "bean_text"
-                            ] = text; let color = "white"; data[
-                                "bean_color"
-                            ] = color; let choices = [
-                                " ",
-                            ]; data[
-                                "bean_choices"
-                            ] = choices; let correct_key = ""; data[
-                                "bean_correct_key"
-                            ] = correct_key; data[
-                                "bean_correct"
-                            ] = correct_key == data[
-                                "response"
-                            ]
-                        }
-                    }
-                ], timeline_variables: []
-            },
-            { timeline: [
-                    { type: jsPsychHtmlKeyboardResponse, trial_duration: () => { let duration = 680; return duration
-                        }, stimulus: () => { let text = ""; let color = "white"; return "<div style='color: " + color + "'>" + text + "</div>"
-                        }, choices: () => { let choices = []; return choices
-                        }, on_finish: (data) => { data[
-                                "bean_type"
-                            ] = 'jsPsychHtmlKeyboardResponse'; let duration = 680; data[
-                                "bean_duration"
-                            ] = duration; let text = ""; data[
-                                "bean_text"
-                            ] = text; let color = "white"; data[
-                                "bean_color"
-                            ] = color; let choices = []; data[
-                                "bean_choices"
-                            ] = choices; let correct_key = ""; data[
-                                "bean_correct_key"
-                            ] = correct_key; data[
-                                "bean_correct"
-                            ] = correct_key == data[
-                                "response"
-                            ]
-                        }
-                    },
-                    { type: jsPsychHtmlKeyboardResponse, trial_duration: () => { let duration = 915; return duration
-                        }, stimulus: () => { let text = "+"; let color = "white"; return "<div style='color: " + color + "'>" + text + "</div>"
-                        }, choices: () => { let choices = []; return choices
-                        }, on_finish: (data) => { data[
-                                "bean_type"
-                            ] = 'jsPsychHtmlKeyboardResponse'; let duration = 915; data[
-                                "bean_duration"
-                            ] = duration; let text = "+"; data[
-                                "bean_text"
-                            ] = text; let color = "white"; data[
-                                "bean_color"
-                            ] = color; let choices = []; data[
-                                "bean_choices"
-                            ] = choices; let correct_key = ""; data[
-                                "bean_correct_key"
-                            ] = correct_key; data[
-                                "bean_correct"
-                            ] = correct_key == data[
-                                "response"
-                            ]
-                        }
-                    },
-                    { type: jsPsychRok, trial_duration: () => { let duration = 750; return duration
-                        }, stimulus: () => { let text = "x"; let color = "white"; return "<div style='color: " + color + "'>" + text + "</div>"
-                        }, number_of_oobs: () => { let number_of_oobs = 20; return number_of_oobs
-                        }, number_of_apertures: () => { let number_of_apertures = 1; return number_of_apertures
-                        }, coherence_movement: () => { let coherence_movement = 10; return coherence_movement
-                        }, coherence_orientation: () => { let coherence_orientation = 100; return coherence_orientation
-                        }, oob_color: () => { let oob_color = "white"; return oob_color
-                        }, background_color: () => { let background_color = "black"; return background_color
-                        }, movement_speed: () => { let movement_speed = 2; return movement_speed
-                        }, aperture_position_left: () => { let aperture_position_left = 50; return aperture_position_left
-                        }, aperture_position_top: () => { let aperture_position_top = 50; return aperture_position_top
-                        }, stimulus_type: () => { let stimulus_type = 0; return stimulus_type
-                        }, correct_choice: () => { let correct_key = ""; return [correct_key
-                            ]
-                        }, choices: () => { let choices = [
-                                "1",
-                                "2",
-                                "3",
-                                "4",
-                            ]; return choices
-                        }, on_finish: (data) => { data[
-                                "bean_type"
-                            ] = 'jsPsychRok'; let duration = 750; data[
-                                "bean_duration"
-                            ] = duration; let text = "x"; data[
-                                "bean_text"
-                            ] = text; let color = "white"; data[
-                                "bean_color"
-                            ] = color; let number_of_oobs = 20; data[
-                                "bean_number_of_oobs"
-                            ] = number_of_oobs; let number_of_apertures = 1; data[
-                                "bean_number_of_apertures"
-                            ] = number_of_apertures; let coherence_movement = 10; data[
-                                "bean_coherence_movement"
-                            ] = coherence_movement; let coherence_orientation = 100; data[
-                                "bean_coherence_orientation"
-                            ] = coherence_orientation; let oob_color = "white"; data[
-                                "bean_oob_color"
-                            ] = oob_color; let background_color = "black"; data[
-                                "bean_background_color"
-                            ] = background_color; let movement_speed = 2; data[
-                                "bean_movement_speed"
-                            ] = movement_speed; let aperture_position_left = 50; data[
-                                "bean_aperture_position_left"
-                            ] = aperture_position_left; let aperture_position_top = 50; data[
-                                "bean_aperture_position_top"
-                            ] = aperture_position_top; let stimulus_type = 0; data[
-                                "bean_stimulus_type"
-                            ] = stimulus_type; let choices = [
-                                "1",
-                                "2",
-                                "3",
-                                "4",
-                            ]; data[
-                                "bean_choices"
-                            ] = choices; let correct_key = ""; data[
-                                "bean_correct_key"
-                            ] = correct_key; data[
-                                "bean_correct"
-                            ] = data[
-                                "correct"
-                            ]
-                        }
-                    },
-                    { type: jsPsychHtmlKeyboardResponse, trial_duration: () => { let duration = 400; return duration
-                        }, stimulus: () => { let text = ""; let color = "white"; return "<div style='color: " + color + "'>" + text + "</div>"
-                        }, choices: () => { let choices = []; return choices
-                        }, on_finish: (data) => { data[
-                                "bean_type"
-                            ] = 'jsPsychHtmlKeyboardResponse'; let duration = 400; data[
-                                "bean_duration"
-                            ] = duration; let text = ""; data[
-                                "bean_text"
-                            ] = text; let color = "white"; data[
-                                "bean_color"
-                            ] = color; let choices = []; data[
-                                "bean_choices"
-                            ] = choices; let correct_key = ""; data[
-                                "bean_correct_key"
-                            ] = correct_key; data[
-                                "bean_correct"
-                            ] = correct_key == data[
-                                "response"
-                            ]
-                        }
-                    }
-                ], timeline_variables: []
-            },
-            { timeline: [
-                    { type: jsPsychHtmlKeyboardResponse, trial_duration: () => { let duration = 680; return duration
-                        }, stimulus: () => { let text = ""; let color = "white"; return "<div style='color: " + color + "'>" + text + "</div>"
-                        }, choices: () => { let choices = []; return choices
-                        }, on_finish: (data) => { data[
-                                "bean_type"
-                            ] = 'jsPsychHtmlKeyboardResponse'; let duration = 680; data[
-                                "bean_duration"
-                            ] = duration; let text = ""; data[
-                                "bean_text"
-                            ] = text; let color = "white"; data[
-                                "bean_color"
-                            ] = color; let choices = []; data[
-                                "bean_choices"
-                            ] = choices; let correct_key = ""; data[
-                                "bean_correct_key"
-                            ] = correct_key; data[
-                                "bean_correct"
-                            ] = correct_key == data[
-                                "response"
-                            ]
-                        }
-                    },
-                    { type: jsPsychHtmlKeyboardResponse, trial_duration: () => { let duration = 915; return duration
-                        }, stimulus: () => { let text = "+"; let color = "white"; return "<div style='color: " + color + "'>" + text + "</div>"
-                        }, choices: () => { let choices = []; return choices
-                        }, on_finish: (data) => { data[
-                                "bean_type"
-                            ] = 'jsPsychHtmlKeyboardResponse'; let duration = 915; data[
-                                "bean_duration"
-                            ] = duration; let text = "+"; data[
-                                "bean_text"
-                            ] = text; let color = "white"; data[
-                                "bean_color"
-                            ] = color; let choices = []; data[
-                                "bean_choices"
-                            ] = choices; let correct_key = ""; data[
-                                "bean_correct_key"
-                            ] = correct_key; data[
-                                "bean_correct"
-                            ] = correct_key == data[
-                                "response"
-                            ]
-                        }
-                    },
-                    { type: jsPsychRok, trial_duration: () => { let duration = 750; return duration
-                        }, stimulus: () => { let text = "x"; let color = "white"; return "<div style='color: " + color + "'>" + text + "</div>"
-                        }, number_of_oobs: () => { let number_of_oobs = 20; return number_of_oobs
-                        }, number_of_apertures: () => { let number_of_apertures = 1; return number_of_apertures
-                        }, coherence_movement: () => { let coherence_movement = 10; return coherence_movement
-                        }, coherence_orientation: () => { let coherence_orientation = 100; return coherence_orientation
-                        }, oob_color: () => { let oob_color = "white"; return oob_color
-                        }, background_color: () => { let background_color = "black"; return background_color
-                        }, movement_speed: () => { let movement_speed = 2; return movement_speed
-                        }, aperture_position_left: () => { let aperture_position_left = 50; return aperture_position_left
-                        }, aperture_position_top: () => { let aperture_position_top = 50; return aperture_position_top
-                        }, stimulus_type: () => { let stimulus_type = 0; return stimulus_type
-                        }, correct_choice: () => { let correct_key = ""; return [correct_key
-                            ]
-                        }, choices: () => { let choices = [
-                                "1",
-                                "2",
-                                "3",
-                                "4",
-                            ]; return choices
-                        }, on_finish: (data) => { data[
-                                "bean_type"
-                            ] = 'jsPsychRok'; let duration = 750; data[
-                                "bean_duration"
-                            ] = duration; let text = "x"; data[
-                                "bean_text"
-                            ] = text; let color = "white"; data[
-                                "bean_color"
-                            ] = color; let number_of_oobs = 20; data[
-                                "bean_number_of_oobs"
-                            ] = number_of_oobs; let number_of_apertures = 1; data[
-                                "bean_number_of_apertures"
-                            ] = number_of_apertures; let coherence_movement = 10; data[
-                                "bean_coherence_movement"
-                            ] = coherence_movement; let coherence_orientation = 100; data[
-                                "bean_coherence_orientation"
-                            ] = coherence_orientation; let oob_color = "white"; data[
-                                "bean_oob_color"
-                            ] = oob_color; let background_color = "black"; data[
-                                "bean_background_color"
-                            ] = background_color; let movement_speed = 2; data[
-                                "bean_movement_speed"
-                            ] = movement_speed; let aperture_position_left = 50; data[
-                                "bean_aperture_position_left"
-                            ] = aperture_position_left; let aperture_position_top = 50; data[
-                                "bean_aperture_position_top"
-                            ] = aperture_position_top; let stimulus_type = 0; data[
-                                "bean_stimulus_type"
-                            ] = stimulus_type; let choices = [
-                                "1",
-                                "2",
-                                "3",
-                                "4",
-                            ]; data[
-                                "bean_choices"
-                            ] = choices; let correct_key = ""; data[
-                                "bean_correct_key"
-                            ] = correct_key; data[
-                                "bean_correct"
-                            ] = data[
-                                "correct"
-                            ]
-                        }
-                    },
-                    { type: jsPsychHtmlKeyboardResponse, trial_duration: () => { let duration = 400; return duration
-                        }, stimulus: () => { let text = ""; let color = "white"; return "<div style='color: " + color + "'>" + text + "</div>"
-                        }, choices: () => { let choices = []; return choices
-                        }, on_finish: (data) => { data[
-                                "bean_type"
-                            ] = 'jsPsychHtmlKeyboardResponse'; let duration = 400; data[
-                                "bean_duration"
-                            ] = duration; let text = ""; data[
-                                "bean_text"
-                            ] = text; let color = "white"; data[
-                                "bean_color"
-                            ] = color; let choices = []; data[
-                                "bean_choices"
-                            ] = choices; let correct_key = ""; data[
-                                "bean_correct_key"
-                            ] = correct_key; data[
-                                "bean_correct"
-                            ] = correct_key == data[
-                                "response"
-                            ]
-                        }
-                    }
-                ], timeline_variables: [
-                    { 'coherence_ratio': 2, 'motion_direction': 20, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 2
-                    },
-                    { 'coherence_ratio': 1, 'motion_direction': 21, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 7
-                    },
-                    { 'coherence_ratio': 1, 'motion_direction': 20, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 7
-                    },
-                    { 'coherence_ratio': 1, 'motion_direction': 20, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 3
-                    },
-                    { 'coherence_ratio': 2, 'motion_direction': 20, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 3
-                    },
-                    { 'coherence_ratio': 2, 'motion_direction': 21, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 1
-                    },
-                    { 'coherence_ratio': 1, 'motion_direction': 20, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 1
-                    },
-                    { 'coherence_ratio': 1, 'motion_direction': 20, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 4
-                    },
-                    { 'coherence_ratio': 2, 'motion_direction': 20, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 1
-                    },
-                    { 'coherence_ratio': 2, 'motion_direction': 21, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 4
-                    },
-                    { 'coherence_ratio': 1, 'motion_direction': 21, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 6
-                    },
-                    { 'coherence_ratio': 1, 'motion_direction': 21, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 3
-                    },
-                    { 'coherence_ratio': 1, 'motion_direction': 20, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 6
-                    },
-                    { 'coherence_ratio': 2, 'motion_direction': 21, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 8
-                    },
-                    { 'coherence_ratio': 1, 'motion_direction': 21, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 4
-                    },
-                    { 'coherence_ratio': 2, 'motion_direction': 21, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 7
-                    },
-                    { 'coherence_ratio': 1, 'motion_direction': 21, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 1
-                    },
-                    { 'coherence_ratio': 1, 'motion_direction': 21, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 2
-                    },
-                    { 'coherence_ratio': 2, 'motion_direction': 21, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 6
-                    },
-                    { 'coherence_ratio': 2, 'motion_direction': 21, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 3
-                    },
-                    { 'coherence_ratio': 2, 'motion_direction': 20, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 7
-                    },
-                    { 'coherence_ratio': 1, 'motion_direction': 20, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 5
-                    },
-                    { 'coherence_ratio': 2, 'motion_direction': 20, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 5
-                    },
-                    { 'coherence_ratio': 1, 'motion_direction': 20, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 2
-                    },
-                    { 'coherence_ratio': 2, 'motion_direction': 21, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 2
-                    },
-                    { 'coherence_ratio': 1, 'motion_direction': 21, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 5
-                    },
-                    { 'coherence_ratio': 1, 'motion_direction': 21, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 8
-                    },
-                    { 'coherence_ratio': 2, 'motion_direction': 20, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 4
-                    },
-                    { 'coherence_ratio': 2, 'motion_direction': 20, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 8
-                    },
-                    { 'coherence_ratio': 1, 'motion_direction': 20, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 8
-                    },
-                    { 'coherence_ratio': 2, 'motion_direction': 21, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 5
-                    },
-                    { 'coherence_ratio': 2, 'motion_direction': 20, 'Item_1': 'A', 'Item_2': 'B', 'Item_3': 'C', 'Item_4': 'D', 'Item_5': '1', 'Item_6': '2', 'Item_7': '3', 'Item_8': '4', '_num': 6
-                    }
-                ]
-            },
-            { timeline: [
-                    { type: jsPsychHtmlKeyboardResponse, stimulus: () => { let text = "... Thank you for your participation!<br>Press SPACE to end the experiment."; let color = "white"; return "<div style='color: " + color + "'>" + text + "</div>"
-                        }, choices: () => { let choices = [
-                                " ",
-                            ]; return choices
-                        }, on_finish: (data) => { data[
-                                "bean_type"
-                            ] = 'jsPsychHtmlKeyboardResponse'; let text = "... Thank you for your participation!<br>Press SPACE to end the experiment."; data[
-                                "bean_text"
-                            ] = text; let color = "white"; data[
-                                "bean_color"
-                            ] = color; let choices = [
-                                " ",
-                            ]; data[
-                                "bean_choices"
-                            ] = choices; let correct_key = ""; data[
-                                "bean_correct_key"
-                            ] = correct_key; data[
-                                "bean_correct"
-                            ] = correct_key == data[
-                                "response"
-                            ]
-                        }
-                    }
-                ], timeline_variables: []
-            }]
-        ; jsPsych.run(trials)</script>
-
+jsPsych = initJsPsych();
+trials = [
+  {
+    timeline: [
+      {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: () => {
+          let text = 'Welcome to this experiment!<br>...<br>Press SPACE to continue.';
+          let color = 'white';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        choices: () => {
+          let choices = [
+            ' ',
+          ];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychHtmlKeyboardResponse';
+          let text = 'Welcome to this experiment!<br>...<br>Press SPACE to continue.';
+          data['bean_text'] = text;
+          let color = 'white';
+          data['bean_color'] = color;
+          let choices = [
+            ' ',
+          ];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = correct_key == data['response']
+        }
+      }
+    ],
+    timeline_variables: []
+  },
+  {
+    timeline: [
+      {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: () => {
+          let text = '... Press SPACE to continue.';
+          let color = 'white';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        choices: () => {
+          let choices = [
+            ' ',
+          ];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychHtmlKeyboardResponse';
+          let text = '... Press SPACE to continue.';
+          data['bean_text'] = text;
+          let color = 'white';
+          data['bean_color'] = color;
+          let choices = [
+            ' ',
+          ];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = correct_key == data['response']
+        }
+      }
+    ],
+    timeline_variables: []
+  },
+  {
+    timeline: [
+      {
+        type: jsPsychHtmlKeyboardResponse,
+        trial_duration: () => {
+          let duration = 680;
+          return duration
+        },
+        stimulus: () => {
+          let text = '';
+          let color = 'white';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        choices: () => {
+          let choices = [];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychHtmlKeyboardResponse';
+          let duration = 680;
+          data['bean_duration'] = duration;
+          let text = '';
+          data['bean_text'] = text;
+          let color = 'white';
+          data['bean_color'] = color;
+          let choices = [];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = correct_key == data['response']
+        }
+      },
+      {
+        type: jsPsychHtmlKeyboardResponse,
+        trial_duration: () => {
+          let duration = 915;
+          return duration
+        },
+        stimulus: () => {
+          let text = '+';
+          let color = 'white';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        choices: () => {
+          let choices = [];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychHtmlKeyboardResponse';
+          let duration = 915;
+          data['bean_duration'] = duration;
+          let text = '+';
+          data['bean_text'] = text;
+          let color = 'white';
+          data['bean_color'] = color;
+          let choices = [];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = correct_key == data['response']
+        }
+      },
+      {
+        type: jsPsychRok,
+        trial_duration: () => {
+          let duration = 500;
+          return duration
+        },
+        stimulus: () => {
+          let text = 'A';
+          let prompt = 'A';
+          let color = 'black';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        text: () => {
+          let text = 'A';
+          return text
+        },
+        prompt: () => {
+          let prompt = 'A';
+          return prompt
+        },
+        color: () => {
+          let color = 'black';
+          return color
+        },
+        number_of_oobs: () => {
+          let number_of_oobs = 20;
+          return number_of_oobs
+        },
+        number_of_apertures: () => {
+          let number_of_apertures = 1;
+          return number_of_apertures
+        },
+        coherent_movement_direction: () => {
+          let coherent_movement_direction = 90;
+          return coherent_movement_direction
+        },
+        coherence_movement: () => {
+          let coherence_movement = 50;
+          return coherence_movement
+        },
+        coherence_orientation: () => {
+          let coherence_orientation = 100;
+          return coherence_orientation
+        },
+        oob_color: () => {
+          let oob_color = 'white';
+          return oob_color
+        },
+        background_color: () => {
+          let background_color = 'black';
+          return background_color
+        },
+        movement_speed: () => {
+          let movement_speed = 40;
+          return movement_speed
+        },
+        aperture_width: () => {
+          let aperture_width = 300;
+          return aperture_width
+        },
+        aperture_height: () => {
+          let aperture_height = 300;
+          return aperture_height
+        },
+        aperture_position_left: () => {
+          let aperture_position_left = 50;
+          return aperture_position_left
+        },
+        aperture_position_top: () => {
+          let aperture_position_top = 50;
+          return aperture_position_top
+        },
+        aperture_shape: () => {
+          let aperture_shape = 1;
+          return aperture_shape
+        },
+        fade_out: () => {
+          let fade_out = 0;
+          return fade_out
+        },
+        stimulus_type: () => {
+          let stimulus_type = 1;
+          return stimulus_type
+        },
+        correct_choice: () => {
+          let correct_key = '';
+          return [correct_key]
+        },
+        choices: () => {
+          let choices = [
+            'NO_KEYS',
+          ];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychRok';
+          let duration = 500;
+          data['bean_duration'] = duration;
+          let text = 'A';
+          data['bean_text'] = text;
+          let prompt = 'A';
+          data['bean_prompt'] = prompt;
+          let color = 'black';
+          data['bean_color'] = color;
+          let number_of_oobs = 20;
+          data['bean_number_of_oobs'] = number_of_oobs;
+          let number_of_apertures = 1;
+          data['bean_number_of_apertures'] = number_of_apertures;
+          let coherent_movement_direction = 90;
+          data['bean_coherent_movement_direction'] = coherent_movement_direction;
+          let coherence_movement = 50;
+          data['bean_coherence_movement'] = coherence_movement;
+          let coherence_orientation = 100;
+          data['bean_coherence_orientation'] = coherence_orientation;
+          let oob_color = 'white';
+          data['bean_oob_color'] = oob_color;
+          let background_color = 'black';
+          data['bean_background_color'] = background_color;
+          let movement_speed = 40;
+          data['bean_movement_speed'] = movement_speed;
+          let aperture_width = 300;
+          data['bean_aperture_width'] = aperture_width;
+          let aperture_height = 300;
+          data['bean_aperture_height'] = aperture_height;
+          let aperture_position_left = 50;
+          data['bean_aperture_position_left'] = aperture_position_left;
+          let aperture_position_top = 50;
+          data['bean_aperture_position_top'] = aperture_position_top;
+          let aperture_shape = 1;
+          data['bean_aperture_shape'] = aperture_shape;
+          let fade_out = 0;
+          data['bean_fade_out'] = fade_out;
+          let stimulus_type = 1;
+          data['bean_stimulus_type'] = stimulus_type;
+          let choices = [
+            'NO_KEYS',
+          ];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = data['correct']
+        }
+      },
+      {
+        type: jsPsychHtmlKeyboardResponse,
+        trial_duration: () => {
+          let duration = 400;
+          return duration
+        },
+        stimulus: () => {
+          let text = '';
+          let color = 'white';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        choices: () => {
+          let choices = [];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychHtmlKeyboardResponse';
+          let duration = 400;
+          data['bean_duration'] = duration;
+          let text = '';
+          data['bean_text'] = text;
+          let color = 'white';
+          data['bean_color'] = color;
+          let choices = [];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = correct_key == data['response']
+        }
+      }
+    ],
+    timeline_variables: []
+  },
+  {
+    timeline: [
+      {
+        type: jsPsychHtmlKeyboardResponse,
+        trial_duration: () => {
+          let duration = 680;
+          return duration
+        },
+        stimulus: () => {
+          let text = '';
+          let color = 'white';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        choices: () => {
+          let choices = [];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychHtmlKeyboardResponse';
+          let duration = 680;
+          data['bean_duration'] = duration;
+          let text = '';
+          data['bean_text'] = text;
+          let color = 'white';
+          data['bean_color'] = color;
+          let choices = [];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = correct_key == data['response']
+        }
+      },
+      {
+        type: jsPsychHtmlKeyboardResponse,
+        trial_duration: () => {
+          let duration = 915;
+          return duration
+        },
+        stimulus: () => {
+          let text = '+';
+          let color = 'white';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        choices: () => {
+          let choices = [];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychHtmlKeyboardResponse';
+          let duration = 915;
+          data['bean_duration'] = duration;
+          let text = '+';
+          data['bean_text'] = text;
+          let color = 'white';
+          data['bean_color'] = color;
+          let choices = [];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = correct_key == data['response']
+        }
+      },
+      {
+        type: jsPsychRok,
+        trial_duration: () => {
+          let duration = 500;
+          return duration
+        },
+        stimulus: () => {
+          let text = jsPsych.timelineVariable('item_1');
+          let prompt = jsPsych.timelineVariable('item_1');
+          let color = 'black';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        text: () => {
+          let text = jsPsych.timelineVariable('item_1');
+          return text
+        },
+        prompt: () => {
+          let prompt = jsPsych.timelineVariable('item_1');
+          return prompt
+        },
+        color: () => {
+          let color = 'black';
+          return color
+        },
+        number_of_oobs: () => {
+          let number_of_oobs = 20;
+          return number_of_oobs
+        },
+        number_of_apertures: () => {
+          let number_of_apertures = 1;
+          return number_of_apertures
+        },
+        coherent_movement_direction: () => {
+          let coherent_movement_direction = jsPsych.timelineVariable('motion_direction');
+          return coherent_movement_direction
+        },
+        coherence_movement: () => {
+          let coherence_movement = jsPsych.timelineVariable('coherence_ratio');
+          return coherence_movement
+        },
+        coherence_orientation: () => {
+          let coherence_orientation = 100;
+          return coherence_orientation
+        },
+        oob_color: () => {
+          let oob_color = 'white';
+          return oob_color
+        },
+        background_color: () => {
+          let background_color = 'black';
+          return background_color
+        },
+        movement_speed: () => {
+          let movement_speed = 40;
+          return movement_speed
+        },
+        aperture_width: () => {
+          let aperture_width = 300;
+          return aperture_width
+        },
+        aperture_height: () => {
+          let aperture_height = 300;
+          return aperture_height
+        },
+        aperture_position_left: () => {
+          let aperture_position_left = 50;
+          return aperture_position_left
+        },
+        aperture_position_top: () => {
+          let aperture_position_top = 50;
+          return aperture_position_top
+        },
+        aperture_shape: () => {
+          let aperture_shape = 1;
+          return aperture_shape
+        },
+        fade_out: () => {
+          let fade_out = 0;
+          return fade_out
+        },
+        stimulus_type: () => {
+          let stimulus_type = 1;
+          return stimulus_type
+        },
+        correct_choice: () => {
+          let correct_key = '';
+          return [correct_key]
+        },
+        choices: () => {
+          let choices = [
+            'NO_KEYS',
+          ];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychRok';
+          let duration = 500;
+          data['bean_duration'] = duration;
+          let text = jsPsych.timelineVariable('item_1');
+          data['bean_text'] = text;
+          let prompt = jsPsych.timelineVariable('item_1');
+          data['bean_prompt'] = prompt;
+          let color = 'black';
+          data['bean_color'] = color;
+          let number_of_oobs = 20;
+          data['bean_number_of_oobs'] = number_of_oobs;
+          let number_of_apertures = 1;
+          data['bean_number_of_apertures'] = number_of_apertures;
+          let coherent_movement_direction = jsPsych.timelineVariable('motion_direction');
+          data['bean_coherent_movement_direction'] = coherent_movement_direction;
+          let coherence_movement = jsPsych.timelineVariable('coherence_ratio');
+          data['bean_coherence_movement'] = coherence_movement;
+          let coherence_orientation = 100;
+          data['bean_coherence_orientation'] = coherence_orientation;
+          let oob_color = 'white';
+          data['bean_oob_color'] = oob_color;
+          let background_color = 'black';
+          data['bean_background_color'] = background_color;
+          let movement_speed = 40;
+          data['bean_movement_speed'] = movement_speed;
+          let aperture_width = 300;
+          data['bean_aperture_width'] = aperture_width;
+          let aperture_height = 300;
+          data['bean_aperture_height'] = aperture_height;
+          let aperture_position_left = 50;
+          data['bean_aperture_position_left'] = aperture_position_left;
+          let aperture_position_top = 50;
+          data['bean_aperture_position_top'] = aperture_position_top;
+          let aperture_shape = 1;
+          data['bean_aperture_shape'] = aperture_shape;
+          let fade_out = 0;
+          data['bean_fade_out'] = fade_out;
+          let stimulus_type = 1;
+          data['bean_stimulus_type'] = stimulus_type;
+          let choices = [
+            'NO_KEYS',
+          ];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = data['correct']
+        }
+      },
+      {
+        type: jsPsychHtmlKeyboardResponse,
+        trial_duration: () => {
+          let duration = 45;
+          return duration
+        },
+        stimulus: () => {
+          let text = '';
+          let color = 'white';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        choices: () => {
+          let choices = [];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychHtmlKeyboardResponse';
+          let duration = 45;
+          data['bean_duration'] = duration;
+          let text = '';
+          data['bean_text'] = text;
+          let color = 'white';
+          data['bean_color'] = color;
+          let choices = [];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = correct_key == data['response']
+        }
+      },
+      {
+        type: jsPsychRok,
+        trial_duration: () => {
+          let duration = 500;
+          return duration
+        },
+        stimulus: () => {
+          let text = jsPsych.timelineVariable('item_2');
+          let prompt = jsPsych.timelineVariable('item_2');
+          let color = 'black';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        text: () => {
+          let text = jsPsych.timelineVariable('item_2');
+          return text
+        },
+        prompt: () => {
+          let prompt = jsPsych.timelineVariable('item_2');
+          return prompt
+        },
+        color: () => {
+          let color = 'black';
+          return color
+        },
+        number_of_oobs: () => {
+          let number_of_oobs = 20;
+          return number_of_oobs
+        },
+        number_of_apertures: () => {
+          let number_of_apertures = 1;
+          return number_of_apertures
+        },
+        coherent_movement_direction: () => {
+          let coherent_movement_direction = jsPsych.timelineVariable('motion_direction');
+          return coherent_movement_direction
+        },
+        coherence_movement: () => {
+          let coherence_movement = jsPsych.timelineVariable('coherence_ratio');
+          return coherence_movement
+        },
+        coherence_orientation: () => {
+          let coherence_orientation = 100;
+          return coherence_orientation
+        },
+        oob_color: () => {
+          let oob_color = 'white';
+          return oob_color
+        },
+        background_color: () => {
+          let background_color = 'black';
+          return background_color
+        },
+        movement_speed: () => {
+          let movement_speed = 40;
+          return movement_speed
+        },
+        aperture_width: () => {
+          let aperture_width = 300;
+          return aperture_width
+        },
+        aperture_height: () => {
+          let aperture_height = 300;
+          return aperture_height
+        },
+        aperture_position_left: () => {
+          let aperture_position_left = 50;
+          return aperture_position_left
+        },
+        aperture_position_top: () => {
+          let aperture_position_top = 50;
+          return aperture_position_top
+        },
+        aperture_shape: () => {
+          let aperture_shape = 1;
+          return aperture_shape
+        },
+        fade_out: () => {
+          let fade_out = 0;
+          return fade_out
+        },
+        stimulus_type: () => {
+          let stimulus_type = 1;
+          return stimulus_type
+        },
+        correct_choice: () => {
+          let correct_key = '';
+          return [correct_key]
+        },
+        choices: () => {
+          let choices = [
+            'NO_KEYS',
+          ];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychRok';
+          let duration = 500;
+          data['bean_duration'] = duration;
+          let text = jsPsych.timelineVariable('item_2');
+          data['bean_text'] = text;
+          let prompt = jsPsych.timelineVariable('item_2');
+          data['bean_prompt'] = prompt;
+          let color = 'black';
+          data['bean_color'] = color;
+          let number_of_oobs = 20;
+          data['bean_number_of_oobs'] = number_of_oobs;
+          let number_of_apertures = 1;
+          data['bean_number_of_apertures'] = number_of_apertures;
+          let coherent_movement_direction = jsPsych.timelineVariable('motion_direction');
+          data['bean_coherent_movement_direction'] = coherent_movement_direction;
+          let coherence_movement = jsPsych.timelineVariable('coherence_ratio');
+          data['bean_coherence_movement'] = coherence_movement;
+          let coherence_orientation = 100;
+          data['bean_coherence_orientation'] = coherence_orientation;
+          let oob_color = 'white';
+          data['bean_oob_color'] = oob_color;
+          let background_color = 'black';
+          data['bean_background_color'] = background_color;
+          let movement_speed = 40;
+          data['bean_movement_speed'] = movement_speed;
+          let aperture_width = 300;
+          data['bean_aperture_width'] = aperture_width;
+          let aperture_height = 300;
+          data['bean_aperture_height'] = aperture_height;
+          let aperture_position_left = 50;
+          data['bean_aperture_position_left'] = aperture_position_left;
+          let aperture_position_top = 50;
+          data['bean_aperture_position_top'] = aperture_position_top;
+          let aperture_shape = 1;
+          data['bean_aperture_shape'] = aperture_shape;
+          let fade_out = 0;
+          data['bean_fade_out'] = fade_out;
+          let stimulus_type = 1;
+          data['bean_stimulus_type'] = stimulus_type;
+          let choices = [
+            'NO_KEYS',
+          ];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = data['correct']
+        }
+      },
+      {
+        type: jsPsychHtmlKeyboardResponse,
+        trial_duration: () => {
+          let duration = 45;
+          return duration
+        },
+        stimulus: () => {
+          let text = '';
+          let color = 'white';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        choices: () => {
+          let choices = [];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychHtmlKeyboardResponse';
+          let duration = 45;
+          data['bean_duration'] = duration;
+          let text = '';
+          data['bean_text'] = text;
+          let color = 'white';
+          data['bean_color'] = color;
+          let choices = [];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = correct_key == data['response']
+        }
+      },
+      {
+        type: jsPsychRok,
+        trial_duration: () => {
+          let duration = 500;
+          return duration
+        },
+        stimulus: () => {
+          let text = jsPsych.timelineVariable('item_3');
+          let prompt = jsPsych.timelineVariable('item_3');
+          let color = 'black';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        text: () => {
+          let text = jsPsych.timelineVariable('item_3');
+          return text
+        },
+        prompt: () => {
+          let prompt = jsPsych.timelineVariable('item_3');
+          return prompt
+        },
+        color: () => {
+          let color = 'black';
+          return color
+        },
+        number_of_oobs: () => {
+          let number_of_oobs = 20;
+          return number_of_oobs
+        },
+        number_of_apertures: () => {
+          let number_of_apertures = 1;
+          return number_of_apertures
+        },
+        coherent_movement_direction: () => {
+          let coherent_movement_direction = jsPsych.timelineVariable('motion_direction');
+          return coherent_movement_direction
+        },
+        coherence_movement: () => {
+          let coherence_movement = jsPsych.timelineVariable('coherence_ratio');
+          return coherence_movement
+        },
+        coherence_orientation: () => {
+          let coherence_orientation = 100;
+          return coherence_orientation
+        },
+        oob_color: () => {
+          let oob_color = 'white';
+          return oob_color
+        },
+        background_color: () => {
+          let background_color = 'black';
+          return background_color
+        },
+        movement_speed: () => {
+          let movement_speed = 40;
+          return movement_speed
+        },
+        aperture_width: () => {
+          let aperture_width = 300;
+          return aperture_width
+        },
+        aperture_height: () => {
+          let aperture_height = 300;
+          return aperture_height
+        },
+        aperture_position_left: () => {
+          let aperture_position_left = 50;
+          return aperture_position_left
+        },
+        aperture_position_top: () => {
+          let aperture_position_top = 50;1
+          return aperture_position_top
+        },
+        aperture_shape: () => {
+          let aperture_shape = 1;
+          return aperture_shape
+        },
+        fade_out: () => {
+          let fade_out = 0;
+          return fade_out
+        },
+        stimulus_type: () => {
+          let stimulus_type = 1;
+          return stimulus_type
+        },
+        correct_choice: () => {
+          let correct_key = '';
+          return [correct_key]
+        },
+        choices: () => {
+          let choices = [
+            'NO_KEYS',
+          ];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychRok';
+          let duration = 500;
+          data['bean_duration'] = duration;
+          let text = jsPsych.timelineVariable('item_3');
+          data['bean_text'] = text;
+          let prompt = jsPsych.timelineVariable('item_3');
+          data['bean_prompt'] = prompt;
+          let color = 'black';
+          data['bean_color'] = color;
+          let number_of_oobs = 20;
+          data['bean_number_of_oobs'] = number_of_oobs;
+          let number_of_apertures = 1;
+          data['bean_number_of_apertures'] = number_of_apertures;
+          let coherent_movement_direction = jsPsych.timelineVariable('motion_direction');
+          data['bean_coherent_movement_direction'] = coherent_movement_direction;
+          let coherence_movement = jsPsych.timelineVariable('coherence_ratio');
+          data['bean_coherence_movement'] = coherence_movement;
+          let coherence_orientation = 100;
+          data['bean_coherence_orientation'] = coherence_orientation;
+          let oob_color = 'white';
+          data['bean_oob_color'] = oob_color;
+          let background_color = 'black';
+          data['bean_background_color'] = background_color;
+          let movement_speed = 40;
+          data['bean_movement_speed'] = movement_speed;
+          let aperture_width = 300;
+          data['bean_aperture_width'] = aperture_width;
+          let aperture_height = 300;
+          data['bean_aperture_height'] = aperture_height;
+          let aperture_position_left = 50;
+          data['bean_aperture_position_left'] = aperture_position_left;
+          let aperture_position_top = 50;
+          data['bean_aperture_position_top'] = aperture_position_top;
+          let aperture_shape = 1;
+          data['bean_aperture_shape'] = aperture_shape;
+          let fade_out = 0;
+          data['bean_fade_out'] = fade_out;
+          let stimulus_type = 1;
+          data['bean_stimulus_type'] = stimulus_type;
+          let choices = [
+            'NO_KEYS',
+          ];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = data['correct']
+        }
+      },
+      {
+        type: jsPsychHtmlKeyboardResponse,
+        trial_duration: () => {
+          let duration = 45;
+          return duration
+        },
+        stimulus: () => {
+          let text = '';
+          let color = 'white';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        choices: () => {
+          let choices = [];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychHtmlKeyboardResponse';
+          let duration = 45;
+          data['bean_duration'] = duration;
+          let text = '';
+          data['bean_text'] = text;
+          let color = 'white';
+          data['bean_color'] = color;
+          let choices = [];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = correct_key == data['response']
+        }
+      },
+      {
+        type: jsPsychRok,
+        trial_duration: () => {
+          let duration = 500;
+          return duration
+        },
+        stimulus: () => {
+          let text = jsPsych.timelineVariable('item_4');
+          let prompt = jsPsych.timelineVariable('item_4');
+          let color = 'black';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        text: () => {
+          let text = jsPsych.timelineVariable('item_4');
+          return text
+        },
+        prompt: () => {
+          let prompt = jsPsych.timelineVariable('item_4');
+          return prompt
+        },
+        color: () => {
+          let color = 'black';
+          return color
+        },
+        number_of_oobs: () => {
+          let number_of_oobs = 20;
+          return number_of_oobs
+        },
+        number_of_apertures: () => {
+          let number_of_apertures = 1;
+          return number_of_apertures
+        },
+        coherent_movement_direction: () => {
+          let coherent_movement_direction = jsPsych.timelineVariable('motion_direction');
+          return coherent_movement_direction
+        },
+        coherence_movement: () => {
+          let coherence_movement = jsPsych.timelineVariable('coherence_ratio');
+          return coherence_movement
+        },
+        coherence_orientation: () => {
+          let coherence_orientation = 100;
+          return coherence_orientation
+        },
+        oob_color: () => {
+          let oob_color = 'white';
+          return oob_color
+        },
+        background_color: () => {
+          let background_color = 'black';
+          return background_color
+        },
+        movement_speed: () => {
+          let movement_speed = 40;
+          return movement_speed
+        },
+        aperture_width: () => {
+          let aperture_width = 300;
+          return aperture_width
+        },
+        aperture_height: () => {
+          let aperture_height = 300;
+          return aperture_height
+        },
+        aperture_position_left: () => {
+          let aperture_position_left = 50;
+          return aperture_position_left
+        },
+        aperture_position_top: () => {
+          let aperture_position_top = 50;
+          return aperture_position_top
+        },
+        aperture_shape: () => {
+          let aperture_shape = 1;
+          return aperture_shape
+        },
+        fade_out: () => {
+          let fade_out = 0;
+          return fade_out
+        },
+        stimulus_type: () => {
+          let stimulus_type = 1;
+          return stimulus_type
+        },
+        correct_choice: () => {
+          let correct_key = '';
+          return [correct_key]
+        },
+        choices: () => {
+          let choices = [
+            'NO_KEYS',
+          ];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychRok';
+          let duration = 500;
+          data['bean_duration'] = duration;
+          let text = jsPsych.timelineVariable('item_4');
+          data['bean_text'] = text;
+          let prompt = jsPsych.timelineVariable('item_4');
+          data['bean_prompt'] = prompt;
+          let color = 'black';
+          data['bean_color'] = color;
+          let number_of_oobs = 20;
+          data['bean_number_of_oobs'] = number_of_oobs;
+          let number_of_apertures = 1;
+          data['bean_number_of_apertures'] = number_of_apertures;
+          let coherent_movement_direction = jsPsych.timelineVariable('motion_direction');
+          data['bean_coherent_movement_direction'] = coherent_movement_direction;
+          let coherence_movement = jsPsych.timelineVariable('coherence_ratio');
+          data['bean_coherence_movement'] = coherence_movement;
+          let coherence_orientation = 100;
+          data['bean_coherence_orientation'] = coherence_orientation;
+          let oob_color = 'white';
+          data['bean_oob_color'] = oob_color;
+          let background_color = 'black';
+          data['bean_background_color'] = background_color;
+          let movement_speed = 40;
+          data['bean_movement_speed'] = movement_speed;
+          let aperture_width = 300;
+          data['bean_aperture_width'] = aperture_width;
+          let aperture_height = 300;
+          data['bean_aperture_height'] = aperture_height;
+          let aperture_position_left = 50;
+          data['bean_aperture_position_left'] = aperture_position_left;
+          let aperture_position_top = 50;
+          data['bean_aperture_position_top'] = aperture_position_top;
+          let aperture_shape = 1;
+          data['bean_aperture_shape'] = aperture_shape;
+          let fade_out = 0;
+          data['bean_fade_out'] = fade_out;
+          let stimulus_type = 1;
+          data['bean_stimulus_type'] = stimulus_type;
+          let choices = [
+            'NO_KEYS',
+          ];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = data['correct']
+        }
+      },
+      {
+        type: jsPsychHtmlKeyboardResponse,
+        trial_duration: () => {
+          let duration = 45;
+          return duration
+        },
+        stimulus: () => {
+          let text = '';
+          let color = 'white';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        choices: () => {
+          let choices = [];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychHtmlKeyboardResponse';
+          let duration = 45;
+          data['bean_duration'] = duration;
+          let text = '';
+          data['bean_text'] = text;
+          let color = 'white';
+          data['bean_color'] = color;
+          let choices = [];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = correct_key == data['response']
+        }
+      },
+      {
+        type: jsPsychRok,
+        trial_duration: () => {
+          let duration = 500;
+          return duration
+        },
+        stimulus: () => {
+          let text = jsPsych.timelineVariable('item_5');
+          let prompt = jsPsych.timelineVariable('item_5');
+          let color = 'black';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        text: () => {
+          let text = jsPsych.timelineVariable('item_5');
+          return text
+        },
+        prompt: () => {
+          let prompt = jsPsych.timelineVariable('item_5');
+          return prompt
+        },
+        color: () => {
+          let color = 'black';
+          return color
+        },
+        number_of_oobs: () => {
+          let number_of_oobs = 20;
+          return number_of_oobs
+        },
+        number_of_apertures: () => {
+          let number_of_apertures = 1;
+          return number_of_apertures
+        },
+        coherent_movement_direction: () => {
+          let coherent_movement_direction = jsPsych.timelineVariable('motion_direction');
+          return coherent_movement_direction
+        },
+        coherence_movement: () => {
+          let coherence_movement = jsPsych.timelineVariable('coherence_ratio');
+          return coherence_movement
+        },
+        coherence_orientation: () => {
+          let coherence_orientation = 100;
+          return coherence_orientation
+        },
+        oob_color: () => {
+          let oob_color = 'white';
+          return oob_color
+        },
+        background_color: () => {
+          let background_color = 'black';
+          return background_color
+        },
+        movement_speed: () => {
+          let movement_speed = 40;
+          return movement_speed
+        },
+        aperture_width: () => {
+          let aperture_width = 300;
+          return aperture_width
+        },
+        aperture_height: () => {
+          let aperture_height = 300;
+          return aperture_height
+        },
+        aperture_position_left: () => {
+          let aperture_position_left = 50;
+          return aperture_position_left
+        },
+        aperture_position_top: () => {
+          let aperture_position_top = 50;
+          return aperture_position_top
+        },
+        aperture_shape: () => {
+          let aperture_shape = 1;
+          return aperture_shape
+        },
+        fade_out: () => {
+          let fade_out = 0;
+          return fade_out
+        },
+        stimulus_type: () => {
+          let stimulus_type = 1;
+          return stimulus_type
+        },
+        correct_choice: () => {
+          let correct_key = '';
+          return [correct_key]
+        },
+        choices: () => {
+          let choices = [
+            'NO_KEYS',
+          ];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychRok';
+          let duration = 500;
+          data['bean_duration'] = duration;
+          let text = jsPsych.timelineVariable('item_5');
+          data['bean_text'] = text;
+          let prompt = jsPsych.timelineVariable('item_5');
+          data['bean_prompt'] = prompt;
+          let color = 'black';
+          data['bean_color'] = color;
+          let number_of_oobs = 20;
+          data['bean_number_of_oobs'] = number_of_oobs;
+          let number_of_apertures = 1;
+          data['bean_number_of_apertures'] = number_of_apertures;
+          let coherent_movement_direction = jsPsych.timelineVariable('motion_direction');
+          data['bean_coherent_movement_direction'] = coherent_movement_direction;
+          let coherence_movement = jsPsych.timelineVariable('coherence_ratio');
+          data['bean_coherence_movement'] = coherence_movement;
+          let coherence_orientation = 100;
+          data['bean_coherence_orientation'] = coherence_orientation;
+          let oob_color = 'white';
+          data['bean_oob_color'] = oob_color;
+          let background_color = 'black';
+          data['bean_background_color'] = background_color;
+          let movement_speed = 40;
+          data['bean_movement_speed'] = movement_speed;
+          let aperture_width = 300;
+          data['bean_aperture_width'] = aperture_width;
+          let aperture_height = 300;
+          data['bean_aperture_height'] = aperture_height;
+          let aperture_position_left = 50;
+          data['bean_aperture_position_left'] = aperture_position_left;
+          let aperture_position_top = 50;
+          data['bean_aperture_position_top'] = aperture_position_top;
+          let aperture_shape = 1;
+          data['bean_aperture_shape'] = aperture_shape;
+          let fade_out = 0;
+          data['bean_fade_out'] = fade_out;
+          let stimulus_type = 1;
+          data['bean_stimulus_type'] = stimulus_type;
+          let choices = [
+            'NO_KEYS',
+          ];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = data['correct']
+        }
+      },
+      {
+        type: jsPsychHtmlKeyboardResponse,
+        trial_duration: () => {
+          let duration = 45;
+          return duration
+        },
+        stimulus: () => {
+          let text = '';
+          let color = 'white';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        choices: () => {
+          let choices = [];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychHtmlKeyboardResponse';
+          let duration = 45;
+          data['bean_duration'] = duration;
+          let text = '';
+          data['bean_text'] = text;
+          let color = 'white';
+          data['bean_color'] = color;
+          let choices = [];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = correct_key == data['response']
+        }
+      },
+      {
+        type: jsPsychRok,
+        trial_duration: () => {
+          let duration = 500;
+          return duration
+        },
+        stimulus: () => {
+          let text = jsPsych.timelineVariable('item_6');
+          let prompt = jsPsych.timelineVariable('item_6');
+          let color = 'black';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        text: () => {
+          let text = jsPsych.timelineVariable('item_6');
+          return text
+        },
+        prompt: () => {
+          let prompt = jsPsych.timelineVariable('item_6');
+          return prompt
+        },
+        color: () => {
+          let color = 'black';
+          return color
+        },
+        number_of_oobs: () => {
+          let number_of_oobs = 20;
+          return number_of_oobs
+        },
+        number_of_apertures: () => {
+          let number_of_apertures = 1;
+          return number_of_apertures
+        },
+        coherent_movement_direction: () => {
+          let coherent_movement_direction = jsPsych.timelineVariable('motion_direction');
+          return coherent_movement_direction
+        },
+        coherence_movement: () => {
+          let coherence_movement = jsPsych.timelineVariable('coherence_ratio');
+          return coherence_movement
+        },
+        coherence_orientation: () => {
+          let coherence_orientation = 100;
+          return coherence_orientation
+        },
+        oob_color: () => {
+          let oob_color = 'white';
+          return oob_color
+        },
+        background_color: () => {
+          let background_color = 'black';
+          return background_color
+        },
+        movement_speed: () => {
+          let movement_speed = 40;
+          return movement_speed
+        },
+        aperture_width: () => {
+          let aperture_width = 300;
+          return aperture_width
+        },
+        aperture_height: () => {
+          let aperture_height = 300;
+          return aperture_height
+        },
+        aperture_position_left: () => {
+          let aperture_position_left = 50;
+          return aperture_position_left
+        },
+        aperture_position_top: () => {
+          let aperture_position_top = 50;
+          return aperture_position_top
+        },
+        aperture_shape: () => {
+          let aperture_shape = 1;
+          return aperture_shape
+        },
+        fade_out: () => {
+          let fade_out = 0;
+          return fade_out
+        },
+        stimulus_type: () => {
+          let stimulus_type = 1;
+          return stimulus_type
+        },
+        correct_choice: () => {
+          let correct_key = '';
+          return [correct_key]
+        },
+        choices: () => {
+          let choices = [
+            'NO_KEYS',
+          ];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychRok';
+          let duration = 500;
+          data['bean_duration'] = duration;
+          let text = jsPsych.timelineVariable('item_6');
+          data['bean_text'] = text;
+          let prompt = jsPsych.timelineVariable('item_6');
+          data['bean_prompt'] = prompt;
+          let color = 'black';
+          data['bean_color'] = color;
+          let number_of_oobs = 20;
+          data['bean_number_of_oobs'] = number_of_oobs;
+          let number_of_apertures = 1;
+          data['bean_number_of_apertures'] = number_of_apertures;
+          let coherent_movement_direction = jsPsych.timelineVariable('motion_direction');
+          data['bean_coherent_movement_direction'] = coherent_movement_direction;
+          let coherence_movement = jsPsych.timelineVariable('coherence_ratio');
+          data['bean_coherence_movement'] = coherence_movement;
+          let coherence_orientation = 100;
+          data['bean_coherence_orientation'] = coherence_orientation;
+          let oob_color = 'white';
+          data['bean_oob_color'] = oob_color;
+          let background_color = 'black';
+          data['bean_background_color'] = background_color;
+          let movement_speed = 40;
+          data['bean_movement_speed'] = movement_speed;
+          let aperture_width = 300;
+          data['bean_aperture_width'] = aperture_width;
+          let aperture_height = 300;
+          data['bean_aperture_height'] = aperture_height;
+          let aperture_position_left = 50;
+          data['bean_aperture_position_left'] = aperture_position_left;
+          let aperture_position_top = 50;
+          data['bean_aperture_position_top'] = aperture_position_top;
+          let aperture_shape = 1;
+          data['bean_aperture_shape'] = aperture_shape;
+          let fade_out = 0;
+          data['bean_fade_out'] = fade_out;
+          let stimulus_type = 1;
+          data['bean_stimulus_type'] = stimulus_type;
+          let choices = [
+            'NO_KEYS',
+          ];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = data['correct']
+        }
+      },
+      {
+        type: jsPsychHtmlKeyboardResponse,
+        trial_duration: () => {
+          let duration = 45;
+          return duration
+        },
+        stimulus: () => {
+          let text = '';
+          let color = 'white';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        choices: () => {
+          let choices = [];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychHtmlKeyboardResponse';
+          let duration = 45;
+          data['bean_duration'] = duration;
+          let text = '';
+          data['bean_text'] = text;
+          let color = 'white';
+          data['bean_color'] = color;
+          let choices = [];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = correct_key == data['response']
+        }
+      },
+      {
+        type: jsPsychRok,
+        trial_duration: () => {
+          let duration = 500;
+          return duration
+        },
+        stimulus: () => {
+          let text = jsPsych.timelineVariable('item_7');
+          let prompt = jsPsych.timelineVariable('item_7');
+          let color = 'black';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        text: () => {
+          let text = jsPsych.timelineVariable('item_7');
+          return text
+        },
+        prompt: () => {
+          let prompt = jsPsych.timelineVariable('item_7');
+          return prompt
+        },
+        color: () => {
+          let color = 'black';
+          return color
+        },
+        number_of_oobs: () => {
+          let number_of_oobs = 20;
+          return number_of_oobs
+        },
+        number_of_apertures: () => {
+          let number_of_apertures = 1;
+          return number_of_apertures
+        },
+        coherent_movement_direction: () => {
+          let coherent_movement_direction = jsPsych.timelineVariable('motion_direction');
+          return coherent_movement_direction
+        },
+        coherence_movement: () => {
+          let coherence_movement = jsPsych.timelineVariable('coherence_ratio');
+          return coherence_movement
+        },
+        coherence_orientation: () => {
+          let coherence_orientation = 100;
+          return coherence_orientation
+        },
+        oob_color: () => {
+          let oob_color = 'white';
+          return oob_color
+        },
+        background_color: () => {
+          let background_color = 'black';
+          return background_color
+        },
+        movement_speed: () => {
+          let movement_speed = 40;
+          return movement_speed
+        },
+        aperture_width: () => {
+          let aperture_width = 300;
+          return aperture_width
+        },
+        aperture_height: () => {
+          let aperture_height = 300;
+          return aperture_height
+        },
+        aperture_position_left: () => {
+          let aperture_position_left = 50;
+          return aperture_position_left
+        },
+        aperture_position_top: () => {
+          let aperture_position_top = 50;
+          return aperture_position_top
+        },
+        aperture_shape: () => {
+          let aperture_shape = 1;
+          return aperture_shape
+        },
+        fade_out: () => {
+          let fade_out = 0;
+          return fade_out
+        },
+        stimulus_type: () => {
+          let stimulus_type = 1;
+          return stimulus_type
+        },
+        correct_choice: () => {
+          let correct_key = '';
+          return [correct_key]
+        },
+        choices: () => {
+          let choices = [
+            'NO_KEYS',
+          ];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychRok';
+          let duration = 500;
+          data['bean_duration'] = duration;
+          let text = jsPsych.timelineVariable('item_7');
+          data['bean_text'] = text;
+          let prompt = jsPsych.timelineVariable('item_7');
+          data['bean_prompt'] = prompt;
+          let color = 'black';
+          data['bean_color'] = color;
+          let number_of_oobs = 20;
+          data['bean_number_of_oobs'] = number_of_oobs;
+          let number_of_apertures = 1;
+          data['bean_number_of_apertures'] = number_of_apertures;
+          let coherent_movement_direction = jsPsych.timelineVariable('motion_direction');
+          data['bean_coherent_movement_direction'] = coherent_movement_direction;
+          let coherence_movement = jsPsych.timelineVariable('coherence_ratio');
+          data['bean_coherence_movement'] = coherence_movement;
+          let coherence_orientation = 100;
+          data['bean_coherence_orientation'] = coherence_orientation;
+          let oob_color = 'white';
+          data['bean_oob_color'] = oob_color;
+          let background_color = 'black';
+          data['bean_background_color'] = background_color;
+          let movement_speed = 40;
+          data['bean_movement_speed'] = movement_speed;
+          let aperture_width = 300;
+          data['bean_aperture_width'] = aperture_width;
+          let aperture_height = 300;
+          data['bean_aperture_height'] = aperture_height;
+          let aperture_position_left = 50;
+          data['bean_aperture_position_left'] = aperture_position_left;
+          let aperture_position_top = 50;
+          data['bean_aperture_position_top'] = aperture_position_top;
+          let aperture_shape = 1;
+          data['bean_aperture_shape'] = aperture_shape;
+          let fade_out = 0;
+          data['bean_fade_out'] = fade_out;
+          let stimulus_type = 1;
+          data['bean_stimulus_type'] = stimulus_type;
+          let choices = [
+            'NO_KEYS',
+          ];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = data['correct']
+        }
+      },
+      {
+        type: jsPsychRok,
+        trial_duration: () => {
+          let duration = 500;
+          return duration
+        },
+        stimulus: () => {
+          let text = jsPsych.timelineVariable('item_8');
+          let prompt = jsPsych.timelineVariable('item_8');
+          let color = 'black';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        text: () => {
+          let text = jsPsych.timelineVariable('item_8');
+          return text
+        },
+        prompt: () => {
+          let prompt = jsPsych.timelineVariable('item_8');
+          return prompt
+        },
+        color: () => {
+          let color = 'black';
+          return color
+        },
+        number_of_oobs: () => {
+          let number_of_oobs = 20;
+          return number_of_oobs
+        },
+        number_of_apertures: () => {
+          let number_of_apertures = 1;
+          return number_of_apertures
+        },
+        coherent_movement_direction: () => {
+          let coherent_movement_direction = jsPsych.timelineVariable('motion_direction');
+          return coherent_movement_direction
+        },
+        coherence_movement: () => {
+          let coherence_movement = jsPsych.timelineVariable('coherence_ratio');
+          return coherence_movement
+        },
+        coherence_orientation: () => {
+          let coherence_orientation = 100;
+          return coherence_orientation
+        },
+        oob_color: () => {
+          let oob_color = 'white';
+          return oob_color
+        },
+        background_color: () => {
+          let background_color = 'black';
+          return background_color
+        },
+        movement_speed: () => {
+          let movement_speed = 40;
+          return movement_speed
+        },
+        aperture_width: () => {
+          let aperture_width = 300;
+          return aperture_width
+        },
+        aperture_height: () => {
+          let aperture_height = 300;
+          return aperture_height
+        },
+        aperture_position_left: () => {
+          let aperture_position_left = 50;
+          return aperture_position_left
+        },
+        aperture_position_top: () => {
+          let aperture_position_top = 50;
+          return aperture_position_top
+        },
+        aperture_shape: () => {
+          let aperture_shape = 1;
+          return aperture_shape
+        },
+        fade_out: () => {
+          let fade_out = 0;
+          return fade_out
+        },
+        stimulus_type: () => {
+          let stimulus_type = 1;
+          return stimulus_type
+        },
+        correct_choice: () => {
+          let correct_key = '';
+          return [correct_key]
+        },
+        choices: () => {
+          let choices = [
+            'NO_KEYS',
+          ];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychRok';
+          let duration = 500;
+          data['bean_duration'] = duration;
+          let text = jsPsych.timelineVariable('item_8');
+          data['bean_text'] = text;
+          let prompt = jsPsych.timelineVariable('item_8');
+          data['bean_prompt'] = prompt;
+          let color = 'black';
+          data['bean_color'] = color;
+          let number_of_oobs = 20;
+          data['bean_number_of_oobs'] = number_of_oobs;
+          let number_of_apertures = 1;
+          data['bean_number_of_apertures'] = number_of_apertures;
+          let coherent_movement_direction = jsPsych.timelineVariable('motion_direction');
+          data['bean_coherent_movement_direction'] = coherent_movement_direction;
+          let coherence_movement = jsPsych.timelineVariable('coherence_ratio');
+          data['bean_coherence_movement'] = coherence_movement;
+          let coherence_orientation = 100;
+          data['bean_coherence_orientation'] = coherence_orientation;
+          let oob_color = 'white';
+          data['bean_oob_color'] = oob_color;
+          let background_color = 'black';
+          data['bean_background_color'] = background_color;
+          let movement_speed = 40;
+          data['bean_movement_speed'] = movement_speed;
+          let aperture_width = 300;
+          data['bean_aperture_width'] = aperture_width;
+          let aperture_height = 300;
+          data['bean_aperture_height'] = aperture_height;
+          let aperture_position_left = 50;
+          data['bean_aperture_position_left'] = aperture_position_left;
+          let aperture_position_top = 50;
+          data['bean_aperture_position_top'] = aperture_position_top;
+          let aperture_shape = 1;
+          data['bean_aperture_shape'] = aperture_shape;
+          let fade_out = 0;
+          data['bean_fade_out'] = fade_out;
+          let stimulus_type = 1;
+          data['bean_stimulus_type'] = stimulus_type;
+          let choices = [
+            'NO_KEYS',
+          ];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = data['correct']
+        }
+      },
+      {
+        type: jsPsychHtmlKeyboardResponse,
+        trial_duration: () => {
+          let duration = 45;
+          return duration
+        },
+        stimulus: () => {
+          let text = '';
+          let color = 'white';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        choices: () => {
+          let choices = [];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychHtmlKeyboardResponse';
+          let duration = 45;
+          data['bean_duration'] = duration;
+          let text = '';
+          data['bean_text'] = text;
+          let color = 'white';
+          data['bean_color'] = color;
+          let choices = [];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = correct_key == data['response']
+        }
+      },
+      {
+        type: jsPsychSurveyText,
+        questions: () => {
+          let prompts = [
+            'Which two numbers did you see during the previously displayed sequence?',
+            'Which two numbers did you see during the previously displayed sequence?',  
+          ];
+          let prompts_ = []
+          for (const p of prompts) {
+            prompts_.push({
+              'prompt': p,
+              'placeholder':"Number1",
+              'columns': 1,
+            })
+          }
+          return prompts_
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychSurveyText';
+          let prompts = [
+            'Which two numbers did you see during the previously displayed sequence?',
+          ];
+          data['bean_prompts'] = prompts;
+        }
+      },
+      {
+        type: jsPsychSurveyText,
+        questions: () => {
+          let prompts = [
+            'Which two numbers did you see during the previously displayed sequence?',
+          ];
+          let prompts_ = []
+          for (const p of prompts) {
+            prompts_.push({
+              'prompt': p,
+              'placeholder':"Number1",
+              'size': 1
+            })
+          }
+          return prompts_
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychSurveyText';
+          let prompts = [
+            'Which two numbers did you see during the previously displayed sequence?',
+          ];
+          data['bean_prompts'] = prompts;
+        }
+      },
+      {
+        type: jsPsychHtmlKeyboardResponse,
+        trial_duration: () => {
+          let duration = 400;
+          return duration
+        },
+        stimulus: () => {
+          let text = '';
+          let color = 'white';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        choices: () => {
+          let choices = [];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychHtmlKeyboardResponse';
+          let duration = 400;
+          data['bean_duration'] = duration;
+          let text = '';
+          data['bean_text'] = text;
+          let color = 'white';
+          data['bean_color'] = color;
+          let choices = [];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = correct_key == data['response']
+        }
+      }
+    ],
+    timeline_variables: [
+      {
+        'coherence_ratio': 0,
+        'motion_direction': 180,
+        'item_1': 'D',
+        'item_2': 'C',
+        'item_3': '2',
+        'item_4': 'B',
+        'item_5': '1',
+        'item_6': 'E',
+        'item_7': 'C',
+        'item_8': 'A'
+      },
+      {
+        'coherence_ratio': 100,
+        'motion_direction': 90,
+        'item_1': 'D',
+        'item_2': '4',
+        'item_3': 'E',
+        'item_4': 'C',
+        'item_5': 'D',
+        'item_6': 'B',
+        'item_7': '4',
+        'item_8': 'E'
+      },
+      {
+        'coherence_ratio': 20,
+        'motion_direction': 270,
+        'item_1': 'D',
+        'item_2': 'C',
+        'item_3': '3',
+        'item_4': 'E',
+        'item_5': 'B',
+        'item_6': '3',
+        'item_7': 'A',
+        'item_8': 'D'
+      },
+      {
+        'coherence_ratio': 100,
+        'motion_direction': 0,
+        'item_1': '3',
+        'item_2': 'A',
+        'item_3': 'C',
+        'item_4': 'B',
+        'item_5': '1',
+        'item_6': 'A',
+        'item_7': 'B',
+        'item_8': 'E'
+      },
+      {
+        'coherence_ratio': 0,
+        'motion_direction': 90,
+        'item_1': 'C',
+        'item_2': 'B',
+        'item_3': 'D',
+        'item_4': '4',
+        'item_5': 'A',
+        'item_6': 'C',
+        'item_7': '1',
+        'item_8': 'B'
+      },
+      {
+        'coherence_ratio': 20,
+        'motion_direction': 0,
+        'item_1': '3',
+        'item_2': 'A',
+        'item_3': 'B',
+        'item_4': 'D',
+        'item_5': 'B',
+        'item_6': 'A',
+        'item_7': 'E',
+        'item_8': '2'
+      },
+      {
+        'coherence_ratio': 20,
+        'motion_direction': 90,
+        'item_1': 'B',
+        'item_2': 'C',
+        'item_3': '3',
+        'item_4': 'E',
+        'item_5': '1',
+        'item_6': 'E',
+        'item_7': 'A',
+        'item_8': 'D'
+      },
+      {
+        'coherence_ratio': 0,
+        'motion_direction': 0,
+        'item_1': 'B',
+        'item_2': '1',
+        'item_3': 'A',
+        'item_4': 'D',
+        'item_5': 'C',
+        'item_6': 'B',
+        'item_7': '1',
+        'item_8': 'D'
+      },
+      {
+        'coherence_ratio': 100,
+        'motion_direction': 270,
+        'item_1': '4',
+        'item_2': 'A',
+        'item_3': 'B',
+        'item_4': 'C',
+        'item_5': 'D',
+        'item_6': 'A',
+        'item_7': '3',
+        'item_8': 'B'
+      },
+      {
+        'coherence_ratio': 0,
+        'motion_direction': 270,
+        'item_1': 'D',
+        'item_2': '1',
+        'item_3': 'A',
+        'item_4': 'B',
+        'item_5': 'D',
+        'item_6': 'A',
+        'item_7': '4',
+        'item_8': 'B'
+      },
+      {
+        'coherence_ratio': 20,
+        'motion_direction': 180,
+        'item_1': 'C',
+        'item_2': '3',
+        'item_3': 'B',
+        'item_4': 'E',
+        'item_5': 'B',
+        'item_6': 'C',
+        'item_7': '3',
+        'item_8': 'A'
+      },
+      {
+        'coherence_ratio': 100,
+        'motion_direction': 180,
+        'item_1': 'B',
+        'item_2': '4',
+        'item_3': 'D',
+        'item_4': 'E',
+        'item_5': 'E',
+        'item_6': 'B',
+        'item_7': 'A',
+        'item_8': '2'
+      }
+    ]
+  },
+  {
+    timeline: [
+      {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: () => {
+          let text = '... Thank you for your participation!<br>Press SPACE to end the experiment.';
+          let color = 'white';
+          return '<div style=\'color: ' + color + '\'>' + text + '</div>'
+        },
+        choices: () => {
+          let choices = [
+            ' ',
+          ];
+          return choices
+        },
+        on_finish: (data) => {
+          data['bean_type'] = 'jsPsychHtmlKeyboardResponse';
+          let text = '... Thank you for your participation!<br>Press SPACE to end the experiment.';
+          data['bean_text'] = text;
+          let color = 'white';
+          data['bean_color'] = color;
+          let choices = [
+            ' ',
+          ];
+          data['bean_choices'] = choices;
+          let correct_key = '';
+          data['bean_correct_key'] = correct_key;
+          data['bean_correct'] = correct_key == data['response']
+        }
+      }
+    ],
+    timeline_variables: []
+  }
+]
+;
+jsPsych.run(trials)
+</script>
 </html>

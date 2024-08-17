@@ -91,29 +91,29 @@ def TEXT_APPENDIX(is_async):
         async_string = "await "
     return f"{async_string}jsPsych.run(trials)\n"
 
-class text_survey_stimulus(SurveyStimulus):
-    def __init__(self,
-                 prompts=[],
-                 placeholder: StringTypeL="0",
-                 size: IntTypeL=1):
-        type = "jsPsychSurveyText"
-        super().__init__(locals())
+# class text_survey_stimulus(SurveyStimulus):
+#     def __init__(self,
+#                  prompts=[],
+#                  placeholder: StringTypeL="0",
+#                  size: IntTypeL=1):
+#         type = "jsPsychSurveyText"
+#         super().__init__(locals())
 
-    def _stimulus_to_psych(self):
-        self.text_trial += self._set_param_js_preamble("questions")
-        self.text_trial += self._set_set_variable("prompts")
-        self.text_trial += "\nlet prompts_ = []"
-        self.text_trial += (
-            f'\nfor (const p of {self._set_get_variable("prompts")})' + "{"
-        )
-        self.text_trial += "\nprompts_.push({'prompt': p,"
-        self.text_trial += " 'placeholder': "
-        self.text_trial += {self._set_get_variable("placeholder")}
-        self.text_trial += " 'size': "
-        self.text_trial += {self._set_get_variable("size")}
-        self.text_trial += " })}"
-        self.text_trial += "return prompts_},"
-        self._set_data_text("prompts")
+#     def _stimulus_to_psych(self):
+#         self.text_trial += self._set_param_js_preamble("questions")
+#         self.text_trial += self._set_set_variable("prompts")
+#         self.text_trial += "\nlet prompts_ = []"
+#         self.text_trial += (
+#             f'\nfor (const p of {self._set_get_variable("prompts")})' + "{"
+#         )
+#         self.text_trial += "\nprompts_.push({'prompt': p,"
+#         self.text_trial += " 'placeholder': "
+#         self.text_trial += {self._set_get_variable("placeholder")}
+#         self.text_trial += " 'size': "
+#         self.text_trial += {self._set_get_variable("size")}
+#         self.text_trial += " })}"
+#         self.text_trial += "return prompts_},"
+#         self._set_data_text("prompts")
 
 
 class rdp_rsvp_stimulus(Stimulus):
@@ -143,9 +143,9 @@ class rdp_rsvp_stimulus(Stimulus):
         text: StringType = "S",
         prompt: StringType = "S",
         color: StringType = "black",
-        choices: List[str] = [],
+        choices: List[str] = ["NO_KEYS"],
         correct_key: StringType = "",
-    ):
+):
         type = "jsPsychRok"
         # type = "jsPsychHtmlKeyboardResponse"
         super().__init__(locals())
@@ -179,6 +179,7 @@ class rdp_rsvp_stimulus(Stimulus):
         self._set_param_full("aperture_position_top")
         self._set_param_full("aperture_shape")
         self._set_param_full("fade_out")
+        # self._set_param_full("choices")
         self._set_param_full("correct_choice")
         self._set_param_full("stimulus_type")
         self.text_trial += self._set_param_js_preamble("correct_choice")
