@@ -1,18 +1,67 @@
 <!DOCTYPE html>
+
 <head>
-<title>My awesome experiment</title><script src="https://unpkg.com/jspsych@7.3.1"></script>
-<script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.2"></script>
-<script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.2"></script>
-<script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@1.1.2"></script>
-<script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.2"></script>
-<script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.2"></script>
-<link href="https://unpkg.com/jspsych@7.3.1/css/jspsych.css" rel="stylesheet" type="text/css"/>
-<script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response@1.1.2"></script>
-<script src="https://unpkg.com/@jspsych/plugin-video-keyboard-response@1.1.2"></script>
-<script src="./index.browser.min.js"></script><style>body {background: #000; color: #fff;}
-div {font-size:36pt; line-height:40pt}.sweetbean-square {width:10vw; height:10vw}.sweetbean-circle {width:10vw; height:10vw; border-radius:50%}.sweetbean-triangle {width:10vw; height:10vw; clip-path:polygon(50% 0, 0 100%, 100% 100%)}.feedback-screen-red {position:absolute; left:0; top:0; width:100vw; height: 100vh; background: red}.feedback-screen-green {position:absolute; left:0; top: 0; width:100vw; height: 100vh; background: green}</style>
+    <title>My awesome experiment</title>
+    <script src="https://unpkg.com/jspsych@7.3.1"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.2"></script>
+    <link href="https://unpkg.com/jspsych@7.3.1/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-video-keyboard-response@1.1.2"></script>
+    <script src="./index.browser.min.js"></script>
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+        }
+
+        div {
+            font-size: 36pt;
+            line-height: 40pt
+        }
+
+        .sweetbean-square {
+            width: 10vw;
+            height: 10vw
+        }
+
+        .sweetbean-circle {
+            width: 10vw;
+            height: 10vw;
+            border-radius: 50%
+        }
+
+        .sweetbean-triangle {
+            width: 10vw;
+            height: 10vw;
+            clip-path: polygon(50% 0, 0 100%, 100% 100%)
+        }
+
+        .feedback-screen-red {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: red
+        }
+
+        .feedback-screen-green {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: green
+        }
+    </style>
 </head>
+
 <body></body>
+
 <script>
 jsPsych = initJsPsych();
 trials = [
