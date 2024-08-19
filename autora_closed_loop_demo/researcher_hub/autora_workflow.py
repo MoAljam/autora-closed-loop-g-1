@@ -186,13 +186,13 @@ def trial_list_to_experiment_data(trial_sequence):
             continue
         # the intensity is equivalent to the number of oobs (set in sweetBean script)
         # rt is a default value of every trial
-        s1 = trial["number_of_oobs"][0]  # first value in list
-        s2 = trial["number_of_oobs"][1]
+        coherence_ration = trial["number_of_oobs"][0]  # first value in list
+        motion_direction = trial["number_of_oobs"][1]
         rt = trial["d_prime"]
         # key = trial['key_press'] oder trial['correct']
 
-        res_dict["coherence_ratio"].append(int(s1))
-        res_dict["motion_direction"].append(int(s2))
+        res_dict["coherence_ratio"].append(int(coherence_ration))
+        res_dict["motion_direction"].append(int(motion_direction))
         res_dict["d_prime"].append(float(rt))
 
     dataframe_raw = pd.DataFrame(res_dict)
