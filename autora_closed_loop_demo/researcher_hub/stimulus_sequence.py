@@ -70,7 +70,7 @@ def stimulus_sequence(experiment_timeline, training_timeline):
 
     def rsvp_maker(item, coherence_ratio=coherence_ratio, motion_direction=motion_direction):
         rdp = rdp_rsvp_stimulus(
-            duration=500,
+            duration=75,
             number_of_oobs=20,
             number_of_apertures=1,
             movement_speed=40,
