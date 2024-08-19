@@ -61,9 +61,8 @@ def stimulus_sequence(experiment_timeline, training_timeline):
     between_items = BlankStimulus(duration=45)
 
     # participant response
-    response = TextStimulus(
-        text="Which two numbers did you see during the previously displayed sequence?", choices=["1", "2", "3", "4"]
-    )
+    response_1 = TextStimulus(text="Use the keyboard to enter the first number <br> [1, 2, 3, 4] <br> Press <x> to skip", choices=["1", "2", "3", "4", "x"])
+    response_2 = TextStimulus(text="Use the keyboard to enter the second number<br> [1, 2, 3, 4] <br> Press <x> to skip", choices=["1", "2", "3", "4", "x" ])
 
     # timeline variables
     # independent variables
@@ -145,8 +144,8 @@ def stimulus_sequence(experiment_timeline, training_timeline):
         rsvp_maker(item_7),
         between_items,
         rsvp_maker(item_8),
-        response,
-        response
+        response_1,
+        response_2
     ]
 
     # # test for one item per trial
