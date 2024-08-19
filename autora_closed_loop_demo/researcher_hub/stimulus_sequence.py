@@ -101,6 +101,7 @@ def stimulus_sequence(experiment_timeline, training_timeline):
     training_list = [
         fixation_onset,
         fixation,
+        fixation_offset,
         rsvp_maker(item_1),
         between_items,
         rsvp_maker(item_2),
@@ -114,11 +115,10 @@ def stimulus_sequence(experiment_timeline, training_timeline):
         rsvp_maker(item_6),
         between_items,
         rsvp_maker(item_7),
-        rsvp_maker(item_8),
         between_items,
+        rsvp_maker(item_8),
         response,
-        response,
-        fixation_offset,
+        response
     ]
 
     training_block = Block(training_list, training_timeline)
@@ -129,6 +129,7 @@ def stimulus_sequence(experiment_timeline, training_timeline):
     experiment_list = [
         fixation_onset,
         fixation,
+        fixation_offset,
         rsvp_maker(item_1),
         between_items,
         rsvp_maker(item_2),
@@ -142,11 +143,10 @@ def stimulus_sequence(experiment_timeline, training_timeline):
         rsvp_maker(item_6),
         between_items,
         rsvp_maker(item_7),
-        rsvp_maker(item_8),
         between_items,
+        rsvp_maker(item_8),
         response,
-        response,
-        fixation_offset,
+        response
     ]
 
     # # test for one item per trial
