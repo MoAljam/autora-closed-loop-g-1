@@ -91,6 +91,7 @@ def TEXT_APPENDIX(is_async):
         async_string = "await "
     return f"{async_string}jsPsych.run(trials)\n"
 
+
 # class text_survey_stimulus(SurveyStimulus):
 #     def __init__(self,
 #                  prompts=[],
@@ -145,7 +146,7 @@ class rdp_rsvp_stimulus(Stimulus):
         color: StringType = "black",
         choices: List[str] = ["NO_KEYS"],
         correct_key: StringType = "",
-):
+    ):
         type = "jsPsychRok"
         # type = "jsPsychHtmlKeyboardResponse"
         super().__init__(locals())
