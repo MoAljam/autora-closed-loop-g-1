@@ -1,13 +1,16 @@
 from sweetbean.parameter import TimelineVariable
-from sweetbean.sequence import Block
+from sweetbean.sequence import Block  # , Experiment
 from sweetbean.stimulus import (
     TextStimulus,
+    SurveyStimulus,
     BlankStimulus,
     FeedbackStimulus,
     RandomDotPatternsStimulus,
     RandomObjectKinematogramStimulus,
+    TextSurveyStimulus,
 )
 
+# from utils import text_survey_stimulus, rdp_rsvp_stimulus, Experiment
 from utils import rdp_rsvp_stimulus, Experiment
 
 
@@ -25,6 +28,7 @@ def stimulus_sequence(experiment_timeline, training_timeline):
     item_8 = TimelineVariable("item_8", [])
 
     correct_response = TimelineVariable("correct_response", [])
+    sequence_type = TimelineVariable("sequence_type", [])
 
     choices = TimelineVariable("choices", [])
     # introduction TODO write introduction
@@ -61,15 +65,28 @@ def stimulus_sequence(experiment_timeline, training_timeline):
     between_items = BlankStimulus(duration=45)
 
     # participant response
-    response_1 = TextStimulus(text="Use the keyboard to enter the first number <br> [1, 2, 3, 4] <br> Press <x> to skip", choices=["1", "2", "3", "4", "x"])
-    response_2 = TextStimulus(text="Use the keyboard to enter the second number<br> [1, 2, 3, 4] <br> Press <x> to skip", choices=["1", "2", "3", "4", "x" ])
+    response_1 = TextStimulus(
+        text="Use the keyboard to enter the first number <br> [1, 2, 3, 4] <br> Press <x> to skip",
+        choices=["1", "2", "3", "4", "x"],
+        correct_key=correct_response,
+    )
+    response_2 = TextStimulus(
+        text="Use the keyboard to enter the second number<br> [1, 2, 3, 4] <br> Press <x> to skip",
+        choices=["1", "2", "3", "4", "x"],
+        correct_key=correct_response,
+    )
+
+    # response = text_survey_stimulus(["Which two numbers did you see during the previously displayed sequence?"])
+    # response = TextSurveyStimulus(["Which two numbers did you see during the previously displayed sequence?"])
 
     # timeline variables
     # independent variables
 
-    def rsvp_maker(item, coherence_ratio=coherence_ratio, motion_direction=motion_direction):
+    def rsvp_maker(
+        item, coherence_ratio=coherence_ratio, motion_direction=motion_direction, sequence_type=sequence_type
+    ):
         rdp = rdp_rsvp_stimulus(
-            duration=75,
+            duration=50,
             number_of_oobs=20,
             number_of_apertures=1,
             movement_speed=40,
@@ -79,9 +96,9 @@ def stimulus_sequence(experiment_timeline, training_timeline):
             background_color="black",
             aperture_height=300,
             aperture_width=300,
-            # choices   =choices,
+            # choices="NO_KEYS",
             stimulus_type=1,  # 1 is for circles
-            text=item,
+            text=sequence_type,
             prompt=item,
             color="black",
         )
@@ -100,7 +117,6 @@ def stimulus_sequence(experiment_timeline, training_timeline):
     training_list = [
         fixation_onset,
         fixation,
-        fixation_offset,
         rsvp_maker(item_1),
         between_items,
         rsvp_maker(item_2),
@@ -114,10 +130,11 @@ def stimulus_sequence(experiment_timeline, training_timeline):
         rsvp_maker(item_6),
         between_items,
         rsvp_maker(item_7),
-        between_items,
         rsvp_maker(item_8),
-        response,
-        response
+        between_items,
+        response_1,
+        response_2,
+        fixation_offset,
     ]
 
     training_block = Block(training_list, training_timeline)
@@ -128,7 +145,6 @@ def stimulus_sequence(experiment_timeline, training_timeline):
     experiment_list = [
         fixation_onset,
         fixation,
-        fixation_offset,
         rsvp_maker(item_1),
         between_items,
         rsvp_maker(item_2),
@@ -142,10 +158,11 @@ def stimulus_sequence(experiment_timeline, training_timeline):
         rsvp_maker(item_6),
         between_items,
         rsvp_maker(item_7),
-        between_items,
         rsvp_maker(item_8),
+        between_items,
         response_1,
-        response_2
+        response_2,
+        fixation_offset,
     ]
 
     # # test for one item per trial
@@ -170,7 +187,7 @@ def stimulus_sequence(experiment_timeline, training_timeline):
     experiment_block = Block(experiment_list, experiment_timeline)
 
     # response_list = [response, response]
-    # respone_block = Block(response_list)
+    # response_block = Block(response_list)
 
     debriefing_list = [debriefing]
     debriefing_block = Block(debriefing_list)
