@@ -8,7 +8,6 @@ from sweetbean.stimulus import (
     RandomDotPatternsStimulus,
     RandomObjectKinematogramStimulus,
 )
-
 from utils import rdp_rsvp_stimulus, Experiment
 
 
@@ -27,7 +26,9 @@ def stimulus_sequence(experiment_timeline, training_timeline):
 
     correct_response = TimelineVariable("correct_response", [])
 
+    sequence_type = TimelineVariable("sequence_type", [])
     choices = TimelineVariable("choices", [])
+    
     # introduction
     introduction = TextStimulus(text="<p>Welcome to the experiment!<br>Let's look into the instructions of the experiment first.</p>Press SPACE to continue.", choices=[" "])
 

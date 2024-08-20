@@ -85,17 +85,24 @@ def assign_items_shuffle_chunk(group):
     return chunks
 
 
-def trial_sequences(coherence_ratios: list, motion_directions: list, all_items_in_one_trial=True):
+def trial_sequences(
+    coherence_ratios: list,
+    motion_directions: list,
+    sequence_type="target",
+    all_items_in_one_trial=True,
+    num_repetitions=5,
+):
 
-    coherence_ratios = Factor("coherence_ratio", coherence_ratios)
-    motion_directions = Factor("motion_direction", motion_directions)
+    coherence_ratio = Factor("coherence_ratio", coherence_ratios)
+    motion_direction = Factor("motion_direction", motion_directions)
+    repetition = Factor("repetetion", list(range(1, num_repetitions + 1)))
 
     # used in case of repeating the items of each trial
     _num = Factor("_num", list(range(1, 9)))
 
-    # design = [coherence_ratio, motion_direction, *items]
-    design = [coherence_ratios, motion_directions]
-    crossing = [coherence_ratios, motion_directions]
+    # design = [coherence_ratio, motion_direction, repetetion, *items]
+    design = [coherence_ratio, motion_direction, repetition]
+    crossing = [coherence_ratio, motion_direction, repetition]
 
     if not all_items_in_one_trial:
         design.append(_num)
@@ -120,28 +127,32 @@ def trial_sequences(coherence_ratios: list, motion_directions: list, all_items_i
                 items_dict = {f"item_{i}": trial_items[i - 1] for i in range(1, 9)}
                 trial.update(items_dict)
                 # add the correct response to each trial
-                # get the 2 numbers from the items
                 numbers = [int(item) for item in trial_items if item.isdigit()]
                 trial["correct_response"] = numbers
+                # add the trail type
+                trial["sequence_type"] = sequence_type
 
     else:
-        # convert to pandas dataframe for more convenient manipulation
-        dfs = [pd.DataFrame(experiment) for experiment in experiments_dicts]
-        extended_dfs = []
-        for df in dfs:
-            extended_chunks = df.groupby(["coherence_ratio", "motion_direction"], group_keys=False).apply(
-                assign_items_shuffle_chunk
-            )
-            extended_chunks = extended_chunks.tolist()
-            # shuffle the chunks (each chunk is the 8 trials of a coherence_ratio and motion_direction pair)
-            np.random.shuffle(extended_chunks)
-            # put the chunks back together
-            shuffled_extended_df = pd.concat(
-                [chunk for chunk_list in extended_chunks for chunk in chunk_list], ignore_index=True
-            )
-            extended_dfs.append(shuffled_extended_df)
-        # convert back to lists of dicts
-        experiments_dicts = [df.to_dict("records") for df in extended_dfs]
+        raise NotImplementedError(
+            "Not implemented , use all_items_in_one_trial=True as it fits the current implementation"
+        )
+        # # convert to pandas dataframe for more convenient manipulation
+        # dfs = [pd.DataFrame(experiment) for experiment in experiments_dicts]
+        # extended_dfs = []
+        # for df in dfs:
+        #     extended_chunks = df.groupby(["coherence_ratio", "motion_direction"], group_keys=False).apply(
+        #         assign_items_shuffle_chunk
+        #     )
+        #     extended_chunks = extended_chunks.tolist()
+        #     # shuffle the chunks (each chunk is the 8 trials of a coherence_ratio and motion_direction pair)
+        #     np.random.shuffle(extended_chunks)
+        #     # put the chunks back together
+        #     shuffled_extended_df = pd.concat(
+        #         [chunk for chunk_list in extended_chunks for chunk in chunk_list], ignore_index=True
+        #     )
+        #     extended_dfs.append(shuffled_extended_df)
+        # # convert back to lists of dicts
+        # experiments_dicts = [df.to_dict("records") for df in extended_dfs]
 
     return experiments_dicts
 
