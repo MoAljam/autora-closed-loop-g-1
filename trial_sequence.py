@@ -86,18 +86,23 @@ def assign_items_shuffle_chunk(group):
 
 
 def trial_sequences(
-    coherence_ratios: list, motion_directions: list, sequence_type="target", all_items_in_one_trial=True
+    coherence_ratios: list,
+    motion_directions: list,
+    sequence_type="target",
+    all_items_in_one_trial=True,
+    num_repetitions=5,
 ):
 
-    coherence_ratios = Factor("coherence_ratio", coherence_ratios)
-    motion_directions = Factor("motion_direction", motion_directions)
+    coherence_ratio = Factor("coherence_ratio", coherence_ratios)
+    motion_direction = Factor("motion_direction", motion_directions)
+    repetition = Factor("repetetion", list(range(1, num_repetitions + 1)))
 
     # used in case of repeating the items of each trial
     _num = Factor("_num", list(range(1, 9)))
 
-    # design = [coherence_ratio, motion_direction, *items]
-    design = [coherence_ratios, motion_directions]
-    crossing = [coherence_ratios, motion_directions]
+    # design = [coherence_ratio, motion_direction, repetetion, *items]
+    design = [coherence_ratio, motion_direction, repetition]
+    crossing = [coherence_ratio, motion_direction, repetition]
 
     if not all_items_in_one_trial:
         design.append(_num)

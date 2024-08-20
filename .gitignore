@@ -3,6 +3,7 @@ node_modules
 build
 .env
 myexperiment*.csv
+test_experiment*.html
 
 # PyCharm ignores are handled by the .idea/.gitignore file
 # VSCode ignores are handled by the .vscode/.gitignore file
