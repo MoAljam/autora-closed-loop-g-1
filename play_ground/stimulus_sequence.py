@@ -1,16 +1,13 @@
 from sweetbean.parameter import TimelineVariable
-from sweetbean.sequence import Block  # , Experiment
+from sweetbean.sequence import Block
 from sweetbean.stimulus import (
     TextStimulus,
-    SurveyStimulus,
     BlankStimulus,
+    TextSurveyStimulus,
     FeedbackStimulus,
     RandomDotPatternsStimulus,
     RandomObjectKinematogramStimulus,
-    TextSurveyStimulus,
 )
-
-# from utils import text_survey_stimulus, rdp_rsvp_stimulus, Experiment
 from utils import rdp_rsvp_stimulus, Experiment
 
 
@@ -28,32 +25,46 @@ def stimulus_sequence(experiment_timeline, training_timeline):
     item_8 = TimelineVariable("item_8", [])
 
     correct_response = TimelineVariable("correct_response", [])
+
     sequence_type = TimelineVariable("sequence_type", [])
-
     choices = TimelineVariable("choices", [])
-    # introduction TODO write introduction
-    introduction = TextStimulus(text="Welcome to this experiment!<br>...<br>Press SPACE to continue.", choices=[" "])
+    
+    # introduction
+    introduction = TextStimulus(text="<p>Welcome to the experiment!<br>Let's look into the instructions of the experiment first.</p>Press SPACE to continue.", choices=[" "])
 
-    # instruction TODO write instruction
-    instruction = TextStimulus(text="... Press SPACE to continue.", choices=[" "])
+    # instruction
+    instruction_1 = TextStimulus(text="<p>In this experiment, you will see a sequence of <strong>eight items</strong>, which consist of <strong>six letters</strong> out of the whole alphabet and <strong>two digits</strong> out of '1', '2', '3', and '4'.<br>The items will be presented one after another in the middle of your screen.</p>Press SPACE to continue.", choices=[" "])
 
-    # training onboarding TODO write training onboarding
-    training_boarding = TextStimulus(text="training trails:<br>... Press SPACE to start the training.", choices=[" "])
+    instruction_2 = TextStimulus(text="<p>Your task will be to focus on the two digits and remember them. You will then also be asked to report them by pressing the according keys on your keyboard. The order in which they were presented doesn't matter here – just the two digits themselves.</p>Press SPACE to continue.", choices=[" "])
 
-    # experiment onboarding TODO write experiment onboarding
+    instruction_3 = TextStimulus(text="<p>There will also be some pattern with moving dots displayed in the background, but you don't have to pay attention to that.<br>Try focusing on the sequence, and in particular, the two digits instead.</p>Press SPACE to continue.", choices = [" "])
+
+    # training onboarding
+    training_boarding = TextStimulus(text="<p>Now let's look at some examples.<br>In the following, we have a couple of training rounds for you to get accustomed to the experiment and the task.</p>Press SPACE to start the training.", choices=[" "])
+
+    # experiment onboarding
     experiment_boarding = TextStimulus(
-        text="experiment trails:<br>... Press SPACE to start the experiment.", choices=[" "]
+        text="<p>Now that you know how the experiment works and what you have to do, let's start with the actual experiment!<br>It will look exactly like the training you just had. Again, try to focus on the sequence and the two digits in the middle of your sceen. Good luck!</p>Press SPACE to start the experiment.", choices=[" "]
     )
 
-    # break TODO incorporate breaks after specific number of trials
+    # break
     pause = TextStimulus(
-        text="Feel free to take a short break now<br>Press SPACE when you are ready to continue the experiment.",
+        text="<p>Feel free to take a short break now!</p>Press SPACE when you are ready to continue the experiment.",
         choices=[" "],
     )
 
-    # debriefing/closure TODO write debriefing
+    # debriefing/closure
     debriefing = TextStimulus(
-        text="... Thank you for your participation!<br>Press SPACE to end the experiment.", choices=[" "]
+        text="<p>Congratulations, you finished the experiment!<br>Thank you for participating and for sticking until the end! I hope you had at least some fun during all of it.</p>Press SPACE to continue.", choices=[" "]
+    )
+
+    feedback = TextSurveyStimulus(
+        prompts=["<p>If you have any feedback for us, we would appreciate hearing about it. Did you encounter any issues during the experiment? Do you have any suggestions for improvement? Or do you have any other comments you want to share with us? Let us know here!</p>"]
+    )
+
+    closure = TextStimulus(
+        text="<p>Thank you once again for your participation, and have a great day!</p>Press SPACE to end the experiment.",
+        choices=[" "]
     )
 
     # fixation cross and blank screens around it
@@ -65,28 +76,15 @@ def stimulus_sequence(experiment_timeline, training_timeline):
     between_items = BlankStimulus(duration=45)
 
     # participant response
-    response_1 = TextStimulus(
-        text="Use the keyboard to enter the first number <br> [1, 2, 3, 4] <br> Press <x> to skip",
-        choices=["1", "2", "3", "4", "x"],
-        correct_key=correct_response,
-    )
-    response_2 = TextStimulus(
-        text="Use the keyboard to enter the second number<br> [1, 2, 3, 4] <br> Press <x> to skip",
-        choices=["1", "2", "3", "4", "x"],
-        correct_key=correct_response,
-    )
-
-    # response = text_survey_stimulus(["Which two numbers did you see during the previously displayed sequence?"])
-    # response = TextSurveyStimulus(["Which two numbers did you see during the previously displayed sequence?"])
+    response_1 = TextStimulus(text="<p>Use your keyboard to enter a digit which you recall seeing out of<br>'1', '2', '3', '4'</p>If you cannot remember any number, press 'x'.", choices=["1", "2", "3", "4", "x"])
+    response_2 = TextStimulus(text="<p>Use your keyboard to enter the other digit you recall seeing out of<br>'1', '2', '3', '4'.</p>If you cannot remember another number, press 'x'.", choices=["1", "2", "3", "4", "x" ])
 
     # timeline variables
     # independent variables
 
-    def rsvp_maker(
-        item, coherence_ratio=coherence_ratio, motion_direction=motion_direction, sequence_type=sequence_type
-    ):
+    def rsvp_maker(item, coherence_ratio=coherence_ratio, motion_direction=motion_direction):
         rdp = rdp_rsvp_stimulus(
-            duration=50,
+            duration=75,
             number_of_oobs=20,
             number_of_apertures=1,
             movement_speed=40,
@@ -96,9 +94,9 @@ def stimulus_sequence(experiment_timeline, training_timeline):
             background_color="black",
             aperture_height=300,
             aperture_width=300,
-            # choices="NO_KEYS",
+            # choices   =choices,
             stimulus_type=1,  # 1 is for circles
-            text=sequence_type,
+            text=item,
             prompt=item,
             color="black",
         )
@@ -108,7 +106,7 @@ def stimulus_sequence(experiment_timeline, training_timeline):
     introduction_list = [introduction]
     introduction_block = Block(introduction_list)
 
-    instruction_list = [instruction]
+    instruction_list = [instruction_1, instruction_2, instruction_3]
     instruction_block = Block(instruction_list)
 
     training_boarding_list = [training_boarding]
@@ -117,6 +115,7 @@ def stimulus_sequence(experiment_timeline, training_timeline):
     training_list = [
         fixation_onset,
         fixation,
+        fixation_offset,
         rsvp_maker(item_1),
         between_items,
         rsvp_maker(item_2),
@@ -130,11 +129,10 @@ def stimulus_sequence(experiment_timeline, training_timeline):
         rsvp_maker(item_6),
         between_items,
         rsvp_maker(item_7),
-        rsvp_maker(item_8),
         between_items,
+        rsvp_maker(item_8),
         response_1,
-        response_2,
-        fixation_offset,
+        response_2
     ]
 
     training_block = Block(training_list, training_timeline)
@@ -145,6 +143,7 @@ def stimulus_sequence(experiment_timeline, training_timeline):
     experiment_list = [
         fixation_onset,
         fixation,
+        fixation_offset,
         rsvp_maker(item_1),
         between_items,
         rsvp_maker(item_2),
@@ -158,11 +157,10 @@ def stimulus_sequence(experiment_timeline, training_timeline):
         rsvp_maker(item_6),
         between_items,
         rsvp_maker(item_7),
-        rsvp_maker(item_8),
         between_items,
+        rsvp_maker(item_8),
         response_1,
-        response_2,
-        fixation_offset,
+        response_2
     ]
 
     # # test for one item per trial
@@ -187,9 +185,9 @@ def stimulus_sequence(experiment_timeline, training_timeline):
     experiment_block = Block(experiment_list, experiment_timeline)
 
     # response_list = [response, response]
-    # response_block = Block(response_list)
+    # respone_block = Block(response_list)
 
-    debriefing_list = [debriefing]
+    debriefing_list = [debriefing, feedback, closure]
     debriefing_block = Block(debriefing_list)
 
     # setting up the final experiment consisting of all blocks
