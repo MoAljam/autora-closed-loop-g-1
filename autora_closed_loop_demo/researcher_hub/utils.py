@@ -15,6 +15,36 @@ from sweetbean.parameter import CodeVariable
 from sweetbean.stimulus import StimulusVar, TimelineVariable, SurveyStimulus
 from sweetbean.update_package_honeycomb import get_import, update_package
 
+import re
+
+
+def update_html_script(file_path, target_path=None):
+    # Read the original HTML content
+    with open(file_path, "r", encoding="utf-8") as file:
+        content = file.read()
+
+    # Define the JavaScript replacement text
+    js_replacement = r"""
+    <script>
+    jsPsych = initJsPsych({
+        on_finish: function () {
+            jsPsych.data.displayData();
+            // download the data
+            jsPsych.data.get().localSave('csv', 'myexperiment.csv');
+        }
+    });"""
+
+    # Use regular expression to find the <script> block and replace it
+    updated_content = re.sub(r"<script>\s*jsPsych\s*=\s*initJsPsych\(\);", js_replacement, content, flags=re.DOTALL)
+
+    # Write the updated HTML back to the file
+    if target_path is None:
+        target_path = file_path
+
+    with open(target_path, "w", encoding="utf-8") as file:
+        file.write(updated_content)
+
+
 StringType = Union[None, str, DerivedParameter, TimelineVariable]
 IntType = Union[None, int, TimelineVariable, DerivedParameter]
 FloatType = Union[None, float, TimelineVariable, DerivedParameter]
@@ -91,6 +121,7 @@ def TEXT_APPENDIX(is_async):
         async_string = "await "
     return f"{async_string}jsPsych.run(trials)\n"
 
+
 # class text_survey_stimulus(SurveyStimulus):
 #     def __init__(self,
 #                  prompts=[],
@@ -145,7 +176,7 @@ class rdp_rsvp_stimulus(Stimulus):
         color: StringType = "black",
         choices: List[str] = ["NO_KEYS"],
         correct_key: StringType = "",
-):
+    ):
         type = "jsPsychRok"
         # type = "jsPsychHtmlKeyboardResponse"
         super().__init__(locals())

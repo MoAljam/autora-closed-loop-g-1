@@ -130,7 +130,6 @@ def stimulus_sequence(experiment_timeline, training_timeline):
         rsvp_maker(item_6),
         between_items,
         rsvp_maker(item_7),
-        between_items,
         rsvp_maker(item_8),
         between_items,
         response_1,
