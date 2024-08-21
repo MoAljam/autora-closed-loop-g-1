@@ -38,20 +38,6 @@ def psudo_experiment_runner():
 
 def run_experiment_once():
     experiment_seq = trial_sequences(
-        coherence_ratios=[0, 20, 100],
-        motion_directions=[0, 90, 180, 270],
-        num_repetitions=5,
-        sequence_type="experiment",
-    )
-
-    training_seq = trial_sequences(
-        coherence_ratios=[10, 90],
-        motion_directions=[45],
-        num_repetitions=1,
-        sequence_type="training",
-    )
-
-    experiment_seq = trial_sequences(
         coherence_ratios=[100],
         motion_directions=[0],
         num_repetitions=2,
@@ -71,7 +57,7 @@ def run_experiment_once():
     display(experiment_seq[0])
     display(training_seq[0])
 
-    stimulus_seq = stimulus_sequence(experiment_seq[0], training_seq[0])
+    js_code = stimulus_sequence(experiment_seq[0], training_seq[0], to_html=True)
     # print(stimulus_seq)
     update_html_script("test_experiment.html")
 
@@ -117,21 +103,7 @@ def runner_on_state(conditions):
 
     # global training_seq
     # experiment_timeline = trial_sequences(coherence_ratios_list, motion_directions_list, all_items_in_one_trial=True)[0]
-    # js_code = stimulus_sequence(experiment_timeline, training_timeline=training_seq)
-
-    experiment_seq = trial_sequences(
-        coherence_ratios=[0, 20, 100],
-        motion_directions=[0, 90, 180, 270],
-        num_repetitions=5,
-        sequence_type="experiment",
-    )
-
-    training_seq = trial_sequences(
-        coherence_ratios=[10, 90],
-        motion_directions=[45],
-        num_repetitions=1,
-        sequence_type="training",
-    )
+    # js_code = stimulus_sequence(experiment_timeline, training_timeline=training_seq, to_html=False)
 
     experiment_seq = trial_sequences(
         coherence_ratios=[100],
@@ -153,7 +125,7 @@ def runner_on_state(conditions):
     display(pd.DataFrame(experiment_seq[0]).head())
     display(pd.DataFrame(training_seq[0]).head())
 
-    js_code = stimulus_sequence(experiment_seq[0], training_seq[0])
+    js_code = stimulus_sequence(experiment_seq[0], training_seq[0], to_html=False)
     conditions_to_send["experiment_code"] = js_code
 
     # res = []
@@ -164,7 +136,7 @@ def runner_on_state(conditions):
     #     # can also do different timelines
     #     timeline = trial_sequences([i_1], [i_2], all_items_in_one_trial=True)[0]
     #     # get js code via sweetBeaan
-    #     js_code = stimulus_sequence(timeline, training_timeline=training_seq)
+    #     js_code = stimulus_sequence(timeline, training_timeline=training_seq, to_html=True)
     #     res.append(js_code)
 
     # conditions_to_send = conditions.copy()
@@ -230,97 +202,100 @@ def trial_list_to_experiment_data(trial_sequence):
     independent: coherence_ratio, motion_direction
     dependent: d_prime
     """
-    trial_sequence = pd.read_csv("../../myexperiment.csv").fillna(pd.NA)
-    
+    trial_sequence = pd.DataFrame(trial_sequence).fillna(pd.NA)
+    # display(trial_sequence.head())
+
+    # target cleaned up data:
+    # index(actual trial index), coherence_ratio, motion_direction, response, bean_correct_key
+    # inference: hit, miss, d_prime
+    # final: index(actual trial index), coherence_ratio, motion_direction, d_prime
+
     trial_sequence["trial_number"] = np.nan
-    index = 1
-    counter = 1
-    for i in range(26, len(trial_sequence) - 2):
-        if counter > 20:
-            counter = 1
-            index = index +1
-        trial_sequence.loc[i, "trial_number"] = index
-        counter = counter + 1
-        print(counter, "counter")
-        
-    # print(trial_sequence.loc[41, "bean_choices"])
-    # print(trial_sequence.isnull())
-    # exit()
-    # trial_sequence.replace(r'^\s*$', pd.NA, regex=True)
-    trial_sequence =  trial_sequence.ffill() # translate coherent_ration and movement_direction to the input row. 
-    trial_sequence.to_csv("vi.csv") 
-    trial_sequence= trial_sequence[(trial_sequence['bean_choices'] == '["1","2","3","4","x"]') & (trial_sequence["trial_number"] > 0)] # remove all other rows
-    trial_sequence = trial_sequence[['coherence_movement','coherent_movement_direction', 'trial_number', 'response', 'bean_correct_key']] # remove unnecessary columns
-    trial_sequence = trial_sequence.groupby(['trial_number', 'bean_correct_key', 'coherence_movement', 'coherent_movement_direction']).agg(lambda x: tuple(x)) 
-    trial_sequence['hit'] = pd.NA
-    trial_sequence['miss'] = pd.NA
-    for trial in trial_sequence: 
-        if sorted(trial['response']) == sorted(trial['bean_correct_key']):
-            trial['hit'] = 2
-        elif trial["response"].isin(trial['bean_correct_key']):
-            trial['hit'] = 1
-            trial['miss'] = 1
-        else:
-            trial['miss'] = 2
+    trial_sequence["hit"] = np.nan
+    trial_sequence["miss"] = np.nan
+    trial_sequence["d_prime"] = np.nan
 
-    d_prime(trial_sequence['hit'].sum , trial_sequence['miss'].sum)
-    trial_sequence.to_csv("vi_2.csv") 
-    exit()
-    
-    exit()
-    # exit()
-    
-    
-        
-        
+    # get all rok trials
+    rok_trials = trial_sequence[trial_sequence["trial_type"] == "rok"]
+    # get only relevant columns
+    rok_trials = rok_trials.loc[:, ["bean_text", "coherence_movement", "coherent_movement_direction"]]
+    rok_trials = rok_trials.rename(
+        columns={
+            "bean_text": "type",
+            "coherence_movement": "coherence_ratio",
+            "coherent_movement_direction": "motion_direction",
+        }
+    )
+    # get rid of duplicated information (each 8 rows are one actual trial)
+    rok_trials = rok_trials.reset_index(drop=True)
+    rok_trials = rok_trials[::8]
+    rok_trials = rok_trials.reset_index(drop=True)
+    # display(rok_trials)
+    # get all responses trails
+    # all the html-keyboard-response where bean_correct_key in not null or empty or NA / NaN
+    response_trials = trial_sequence[
+        (trial_sequence["trial_type"] == "html-keyboard-response") & (trial_sequence["bean_correct_key"].notna())
+    ]
 
-    # return surogate data
-    # data = {
-    #     "coherence_ratio": [0, 20],
-    #     "motion_direction": [0, 0],
-    #     "d_prime": [0.5, 0.6],
-    # }
-    # return pd.DataFrame(data)
+    # get only relevant columns
+    response_trials = response_trials.loc[:, ["response", "bean_correct_key"]]
+    response_trials = response_trials.rename(columns={"bean_correct_key": "correct_response"})
+    # put each 2 response trials after each others into one row
+    # pair the responses
+    responses = response_trials["response"].values.reshape(-1, 2).tolist()
+    # make sure responses are floats
+    responses = [[float(r) for r in response] for response in responses]
+    # get rid of the duplicates
+    response_trials = response_trials[::2]
+    response_trials["response"] = responses
+    # convert correct_response from a string list "[1,2]" to a list [1,2]
+    response_trials["correct_response"] = response_trials["correct_response"].apply(lambda x: json.loads(x))
+    response_trials = response_trials.reset_index(drop=True)
+    # display(response_trials)
 
-    res_dict = {"coherence_ratio": [], "motion_direction": [], "d_prime": []}
-    for trial in trial_sequence:
-        # Filter trials that are not ROK (instructions, fixation, ...)
-        if trial["sequence_type"] != "experiment":
+    # merge the two dataframes
+    trials = pd.concat([rok_trials, response_trials], axis=1)
 
-            continue
-        # Filter trials without rt
-        if "d_prime" not in trial or trial["d_prime"] is None:
-            continue
-        # the intensity is equivalent to the number of oobs (set in sweetBean script)
-        # rt is a default value of every trial
-        coherence_ration = trial["number_of_oobs"][0]  # first value in list
-        motion_direction = trial["number_of_oobs"][1]
-        d_prime = trial["d_prime"]
-        # key = trial['key_press'] oder trial['correct']
+    # infer the hit and miss per trial
+    # hit: number of elements in the
+    # miss: number of elements in the correct_response that are not in the response
+    def num_hits(array_1, array_2):
+        sorted_array_1 = np.sort(array_1)
+        sorted_array_2 = np.sort(array_2)
+        return np.sum(sorted_array_1 == sorted_array_2)
 
-        res_dict["coherence_ratio"].append(int(coherence_ration))
-        res_dict["motion_direction"].append(int(motion_direction))
-        res_dict["d_prime"].append(float(d_prime))
+    def num_misses(array_1, array_2):
+        sorted_array_1 = np.sort(array_1)
+        sorted_array_2 = np.sort(array_2)
+        return np.sum(sorted_array_1 != sorted_array_2)
 
-    dataframe_raw = pd.DataFrame(res_dict)
+    trials["hit"] = trials.apply(lambda x: num_hits(x["response"], x["correct_response"]), axis=1)
+    trials["miss"] = trials.apply(lambda x: num_misses(x["response"], x["correct_response"]), axis=1)
+    # display(trials)
 
-    # Calculate the mean rt for each S1/S2 combination
-    # easiest: add one condition per participants, but this is not always possible
-    grouped = dataframe_raw.groupby(["coherence_ratio", "motion_direction"]).mean().reset_index()
-
-    return grouped
+    # group the trails on condition (coherence_ratio, motion_direction)
+    trials_grouped = trials.groupby(["coherence_ratio", "motion_direction"]).agg({"hit": "sum", "miss": "sum"})
+    # calculate d_prime
+    # d_prime: d_prime(hit, miss)
+    # where hit and misses are aggregated over all trials with the same conditions
+    trials_grouped["d_prime"] = trials_grouped.apply(lambda x: d_prime(x["hit"], x["miss"]), axis=1)
+    trials_grouped = trials_grouped.reset_index()
+    # select only the experiment data columns (drop hit and miss)
+    trials_grouped = trials_grouped.loc[:, ["coherence_ratio", "motion_direction", "d_prime"]]
+    # display(trials_grouped)
+    return trials_grouped
 
 
 # *** Report the data *** #
 # If you changed the theorist, also change this part
-def report_linear_fit(m: LinearRegression, precision=4):
-    s = f"y = {np.round(m.coef_[0].item(), precision)} x " f"+ {np.round(m.intercept_.item(), 4)}"
-    return s
+# def report_linear_fit(m: LinearRegression, precision=4):
+#     s = f"y = {np.round(m.coef_[0].item(), precision)} x " f"+ {np.round(m.intercept_.item(), 4)}"
+#     return s
 
 
 if __name__ == "__main__":
 
-    run_experiment_once()
+    # run_experiment_once()
     # to run the experiment once localy and download the data
     # -> either uncomment the above line
     # OR
