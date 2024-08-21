@@ -128,7 +128,8 @@ def trial_sequences(
                 trial.update(items_dict)
                 # add the correct response to each trial
                 numbers = [int(item) for item in trial_items if item.isdigit()]
-                trial["correct_response"] = numbers
+                # trial["correct_choice"] = [chr(n) for n in numbers]
+                trial["correct_choice"] = numbers
                 # add the trail type
                 trial["sequence_type"] = sequence_type
 

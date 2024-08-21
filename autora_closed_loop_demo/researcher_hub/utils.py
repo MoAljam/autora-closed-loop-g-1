@@ -176,6 +176,7 @@ class rdp_rsvp_stimulus(Stimulus):
         color: StringType = "black",
         choices: List[str] = ["NO_KEYS"],
         correct_key: StringType = "",
+        correct_choice: List[str]= [""],
     ):
         type = "jsPsychRok"
         # type = "jsPsychHtmlKeyboardResponse"

@@ -24,8 +24,7 @@ def stimulus_sequence(experiment_timeline, training_timeline):
     item_7 = TimelineVariable("item_7", [])
     item_8 = TimelineVariable("item_8", [])
 
-    correct_response = TimelineVariable("correct_response", [])
-
+    correct_choice = TimelineVariable("correct_choice", [])
     sequence_type = TimelineVariable("sequence_type", [])
     choices = TimelineVariable("choices", [])
     
@@ -76,13 +75,15 @@ def stimulus_sequence(experiment_timeline, training_timeline):
     between_items = BlankStimulus(duration=45)
 
     # participant response
-    response_1 = TextStimulus(text="<p>Use your keyboard to enter a digit which you recall seeing out of<br>'1', '2', '3', '4'</p>If you cannot remember any number, press 'x'.", choices=["1", "2", "3", "4", "x"])
-    response_2 = TextStimulus(text="<p>Use your keyboard to enter the other digit you recall seeing out of<br>'1', '2', '3', '4'.</p>If you cannot remember another number, press 'x'.", choices=["1", "2", "3", "4", "x" ])
+    response_1 = TextStimulus(text="<p>Use your keyboard to enter a digit which you recall seeing out of<br>'1', '2', '3', '4'</p>If you cannot remember any number, press 'x'.", choices=["1", "2", "3", "4", "x"],correct_key=correct_choice)
+    response_2 = TextStimulus(text="<p>Use your keyboard to enter the other digit you recall seeing out of<br>'1', '2', '3', '4'.</p>If you cannot remember another number, press 'x'.", choices=["1", "2", "3", "4", "x" ], correct_key=correct_choice)
 
     # timeline variables
     # independent variables
 
-    def rsvp_maker(item, coherence_ratio=coherence_ratio, motion_direction=motion_direction):
+    def rsvp_maker(
+        item, coherence_ratio=coherence_ratio, motion_direction=motion_direction, correct_choice=correct_choice, sequence_type=sequence_type
+    ):
         rdp = rdp_rsvp_stimulus(
             duration=75,
             number_of_oobs=20,
@@ -99,6 +100,7 @@ def stimulus_sequence(experiment_timeline, training_timeline):
             text=item,
             prompt=item,
             color="black",
+            correct_key=correct_choice
         )
         return rdp
 
