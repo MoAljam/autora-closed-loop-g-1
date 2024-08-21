@@ -22,6 +22,7 @@ from sweetbean.stimulus import TextStimulus
 from trial_sequence import trial_sequences
 from stimulus_sequence import stimulus_sequence
 from utils import update_html_script
+from methods import d_prime
 from IPython.display import display
 import os
 
@@ -229,18 +230,63 @@ def trial_list_to_experiment_data(trial_sequence):
     independent: coherence_ratio, motion_direction
     dependent: d_prime
     """
+    trial_sequence = pd.read_csv("../../myexperiment.csv").fillna(pd.NA)
+    
+    trial_sequence["trial_number"] = np.nan
+    index = 1
+    counter = 1
+    for i in range(26, len(trial_sequence) - 2):
+        if counter > 20:
+            counter = 1
+            index = index +1
+        trial_sequence.loc[i, "trial_number"] = index
+        counter = counter + 1
+        print(counter, "counter")
+        
+    # print(trial_sequence.loc[41, "bean_choices"])
+    # print(trial_sequence.isnull())
+    # exit()
+    # trial_sequence.replace(r'^\s*$', pd.NA, regex=True)
+    trial_sequence =  trial_sequence.ffill() # translate coherent_ration and movement_direction to the input row. 
+    trial_sequence.to_csv("vi.csv") 
+    trial_sequence= trial_sequence[(trial_sequence['bean_choices'] == '["1","2","3","4","x"]') & (trial_sequence["trial_number"] > 0)] # remove all other rows
+    trial_sequence = trial_sequence[['coherence_movement','coherent_movement_direction', 'trial_number', 'response', 'bean_correct_key']] # remove unnecessary columns
+    trial_sequence = trial_sequence.groupby(['trial_number', 'bean_correct_key', 'coherence_movement', 'coherent_movement_direction']).agg(lambda x: tuple(x)) 
+    trial_sequence['hit'] = pd.NA
+    trial_sequence['miss'] = pd.NA
+    for trial in trial_sequence: 
+        if sorted(trial['response']) == sorted(trial['bean_correct_key']):
+            trial['hit'] = 2
+        elif trial["response"].isin(trial['bean_correct_key']):
+            trial['hit'] = 1
+            trial['miss'] = 1
+        else:
+            trial['miss'] = 2
+
+    d_prime(trial_sequence['hit'].sum , trial_sequence['miss'].sum)
+    trial_sequence.to_csv("vi_2.csv") 
+    exit()
+    
+    exit()
+    # exit()
+    
+    
+        
+        
 
     # return surogate data
-    data = {
-        "coherence_ratio": [0, 20],
-        "motion_direction": [0, 0],
-        "d_prime": [0.5, 0.6],
-    }
-    return pd.DataFrame(data)
+    # data = {
+    #     "coherence_ratio": [0, 20],
+    #     "motion_direction": [0, 0],
+    #     "d_prime": [0.5, 0.6],
+    # }
+    # return pd.DataFrame(data)
+
     res_dict = {"coherence_ratio": [], "motion_direction": [], "d_prime": []}
     for trial in trial_sequence:
         # Filter trials that are not ROK (instructions, fixation, ...)
-        if trial["trial_type"] != "rok":
+        if trial["sequence_type"] != "experiment":
+
             continue
         # Filter trials without rt
         if "d_prime" not in trial or trial["d_prime"] is None:
@@ -274,7 +320,7 @@ def report_linear_fit(m: LinearRegression, precision=4):
 
 if __name__ == "__main__":
 
-    # run_experiment_once()
+    run_experiment_once()
     # to run the experiment once localy and download the data
     # -> either uncomment the above line
     # OR
