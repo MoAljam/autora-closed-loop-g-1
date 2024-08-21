@@ -41,7 +41,7 @@ def run_experiment_once():
         coherence_ratios=[100],
         motion_directions=[0],
         num_repetitions=2,
-        sequence_type="experiment",
+        sequence_type="target",
     )
 
     training_seq = trial_sequences(
@@ -109,7 +109,7 @@ def runner_on_state(conditions):
         coherence_ratios=[100],
         motion_directions=[0],
         num_repetitions=2,
-        sequence_type="experiment",
+        sequence_type="target",
     )
 
     training_seq = trial_sequences(
@@ -128,21 +128,6 @@ def runner_on_state(conditions):
     js_code = stimulus_sequence(experiment_seq[0], training_seq[0], to_html=False)
     conditions_to_send["experiment_code"] = js_code
 
-    # res = []
-    # for idx, c in conditions.iterrows():
-    #     i_1 = c["coherence_ratio"]
-    #     i_2 = c["motion_direction"]
-    #     # get a timeline via sweetPea
-    #     # can also do different timelines
-    #     timeline = trial_sequences([i_1], [i_2], all_items_in_one_trial=True)[0]
-    #     # get js code via sweetBeaan
-    #     js_code = stimulus_sequence(timeline, training_timeline=training_seq, to_html=True)
-    #     res.append(js_code)
-
-    # conditions_to_send = conditions.copy()
-    # conditions_to_send["experiment_code"] = res
-    # upload and run the experiment, sending is to firestore database as conditions
-    # data_raw = experiment_runner(conditions_to_send)  # returns observations for each condition as jsPsych data
     # dev
     data_raw = experiment_runner()  # returns observations for each condition as jsPsych data
     print("## got raw data ##")
@@ -152,48 +137,11 @@ def runner_on_state(conditions):
 
     # process the experiment data
     experiment_data = pd.DataFrame()
-    # for item in data_raw:
-    #     _lst = json.loads(item)["trials"]
-    #     _df = trial_list_to_experiment_data(_lst)  # list of dicts
-    #     experiment_data = pd.concat([experiment_data, _df], axis=0)
-
     _df = trial_list_to_experiment_data(data_raw)
     experiment_data = pd.concat([experiment_data, _df], axis=0)
     print("processed experiment_data:")
     display(experiment_data)
     return Delta(experiment_data=experiment_data)
-
-
-"""
-    numbers = list(conditions['number'])
-    res = []
-    for number in numbers:
-        # we use sweetbean to create a full experiment from the numbers
-
-        # For more information on sweetbean: https://autoresearch.github.io/sweetbean/
-        text = TextStimulus(
-            duration=10000, text=f"press a if {number} is larger then 20, b if not.",
-            color="purple", choices=["a", "b"]
-        )
-        block = Block([text])
-        experiment = Experiment([block])
-        # here we export the experiment as javascript function
-        condition = experiment.to_js_string(as_function=True, is_async=True)
-        res.append(condition)
-    # We append a column (experiment_code) to the conditions and send it to the runner
-    conditions_to_send = conditions.copy()
-    conditions_to_send['experiment_code'] = res
-    # Here, parse the return value of the runner. The return value depends on the specific
-    # implementation of your online experiment (see testing_zone/src/design/main.js).
-    # In this example, the experiment runner returns a list of strings, that contain json formatted
-    # dictionaries.
-    # Example:
-    # data = ['{'number':4, rt':.8}', ...]
-    result = []
-    for item in data:
-        result.append(json.loads(item))
-    return Delta(experiment_data=pd.DataFrame(result))
-"""
 
 
 def trial_list_to_experiment_data(trial_sequence):
@@ -209,11 +157,6 @@ def trial_list_to_experiment_data(trial_sequence):
     # index(actual trial index), coherence_ratio, motion_direction, response, bean_correct_key
     # inference: hit, miss, d_prime
     # final: index(actual trial index), coherence_ratio, motion_direction, d_prime
-
-    trial_sequence["trial_number"] = np.nan
-    trial_sequence["hit"] = np.nan
-    trial_sequence["miss"] = np.nan
-    trial_sequence["d_prime"] = np.nan
 
     # get all rok trials
     rok_trials = trial_sequence[trial_sequence["trial_type"] == "rok"]
@@ -231,6 +174,7 @@ def trial_list_to_experiment_data(trial_sequence):
     rok_trials = rok_trials[::8]
     rok_trials = rok_trials.reset_index(drop=True)
     # display(rok_trials)
+
     # get all responses trails
     # all the html-keyboard-response where bean_correct_key in not null or empty or NA / NaN
     response_trials = trial_sequence[
@@ -271,7 +215,10 @@ def trial_list_to_experiment_data(trial_sequence):
 
     trials["hit"] = trials.apply(lambda x: num_hits(x["response"], x["correct_response"]), axis=1)
     trials["miss"] = trials.apply(lambda x: num_misses(x["response"], x["correct_response"]), axis=1)
-    # display(trials)
+    display(trials)
+
+    # get only target trials (type: "target")
+    trials = trials[trials["type"] == "target"]
 
     # group the trails on condition (coherence_ratio, motion_direction)
     trials_grouped = trials.groupby(["coherence_ratio", "motion_direction"]).agg({"hit": "sum", "miss": "sum"})
@@ -280,7 +227,9 @@ def trial_list_to_experiment_data(trial_sequence):
     # where hit and misses are aggregated over all trials with the same conditions
     trials_grouped["d_prime"] = trials_grouped.apply(lambda x: d_prime(x["hit"], x["miss"]), axis=1)
     trials_grouped = trials_grouped.reset_index()
-    # select only the experiment data columns (drop hit and miss)
+    display(trials_grouped)
+
+    # select only the experiment data columns (drop hit and miss and type)
     trials_grouped = trials_grouped.loc[:, ["coherence_ratio", "motion_direction", "d_prime"]]
     # display(trials_grouped)
     return trials_grouped
