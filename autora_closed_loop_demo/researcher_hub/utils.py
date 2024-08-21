@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, TypeVar, Union
+import re
 
 from sweetbean.parameter import (
     DataVariable,
@@ -15,7 +16,12 @@ from sweetbean.parameter import CodeVariable
 from sweetbean.stimulus import StimulusVar, TimelineVariable, SurveyStimulus
 from sweetbean.update_package_honeycomb import get_import, update_package
 
-import re
+
+StringType = Union[None, str, DerivedParameter, TimelineVariable]
+IntType = Union[None, int, TimelineVariable, DerivedParameter]
+FloatType = Union[None, float, TimelineVariable, DerivedParameter]
+StringTypeL = Union[List[StringType], StringType]
+IntTypeL = Union[List[IntType], IntType]
 
 
 def update_html_script(file_path, target_path=None):
@@ -44,12 +50,6 @@ def update_html_script(file_path, target_path=None):
     with open(target_path, "w", encoding="utf-8") as file:
         file.write(updated_content)
 
-
-StringType = Union[None, str, DerivedParameter, TimelineVariable]
-IntType = Union[None, int, TimelineVariable, DerivedParameter]
-FloatType = Union[None, float, TimelineVariable, DerivedParameter]
-StringTypeL = Union[List[StringType], StringType]
-IntTypeL = Union[List[IntType], IntType]
 
 HTML_PREAMBLE = (
     "<!DOCTYPE html>\n"
@@ -176,10 +176,9 @@ class rdp_rsvp_stimulus(Stimulus):
         color: StringType = "black",
         choices: List[str] = ["NO_KEYS"],
         correct_key: StringType = "",
-        correct_choice: List[str]= [""],
+        correct_choice: List[str] = [""],
     ):
         type = "jsPsychRok"
-        # type = "jsPsychHtmlKeyboardResponse"
         super().__init__(locals())
 
     def _stimulus_to_psych(self):
