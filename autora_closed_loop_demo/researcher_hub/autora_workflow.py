@@ -387,8 +387,8 @@ def get_validation_MSE(validation_experiment_data, working_state):
         y_pred_lr = model_lr.predict(X)
         y_pred_polyr = model_polyr.predict(X)
 
-        MSE_lr = ((y - y_pred_lr) ** 2).mean()[0]
-        MSE_polyr = ((y - y_pred_polyr) ** 2).mean()[0]
+        MSE_lr = ((y - y_pred_lr) ** 2).mean().iloc[0]
+        MSE_polyr = ((y - y_pred_polyr) ** 2).mean().iloc[0]
 
         MSE_values_lr_[idx] = MSE_lr
         MSE_values_polyr[idx] = MSE_polyr
