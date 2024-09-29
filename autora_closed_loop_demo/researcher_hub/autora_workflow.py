@@ -31,8 +31,34 @@ from methods import d_prime
 from IPython.display import display
 import os
 
+# region Setup
+# *** setup *** #
+# for the quick testing locally, we use experiment data data from a csv file
+LOCAL = True  # if True, use the local experiment runner, else use the firebase runner
+# to generate the data uncomment the following line
+# run_experiment_once()
+# OR run it from terminal
+# python
+# >>> from autora_workflow import run_experiment_once
+# >>> run_experiment_once()
+# for online deployment, add firebase credentials
+# (https://console.firebase.google.com/)
+#   -> project -> project settings -> service accounts -> generate new private key
+FIREBASE_CREDENTIALS = {}
+# Collect 'NUM_SAMPLES' conditions per iteration
+NUM_SAMPLES = 4
+NUM_ITERATIONS = 3
+INITIAL_CONDITIONS = pd.DataFrame(
+    {
+        "coherence_ratio": [0, 5, 10, 20, 50],
+        "motion_direction": [10, 70, 160, 250, 340],
+    }
+)
 
-def psudo_experiment_runner():
+
+# region helpers
+# helper for local testing
+def psudo_experiment_runner(conditions):
     # load a csv file called experiment_data.csv
     if not os.path.exists("myexperiment.csv"):
         raise FileNotFoundError("myexperiment.csv not found")
@@ -41,10 +67,11 @@ def psudo_experiment_runner():
     return raw_data.to_dict(orient="records")
 
 
+# helper for local testing
 def run_experiment_once():
     experiment_seq = trial_sequences(
-        coherence_ratios=[100, 50, 0],
-        motion_directions=[0, 90, 180, 270],
+        coherence_ratios=[0, 5, 10, 20, 50],
+        motion_directions=[70, 160, 250, 340],
         num_repetitions=2,
         sequence_type="target",
     )
@@ -67,6 +94,7 @@ def run_experiment_once():
     update_html_script("test_experiment.html")
 
 
+# region on_state
 # To use the theorist on the state object, we wrap it with the on_state functionality and return a
 # Delta object.
 # Note: The if the input arguments of the theorist_on_state function are state-fields like
@@ -74,8 +102,6 @@ def run_experiment_once():
 # use those state fields.
 # The output of these functions is always a Delta object. The keyword argument in this case, tells
 # the state object witch field to update.
-
-
 @on_state()
 def theorist_on_state(experiment_data, variables):
     ivs = [iv.name for iv in variables.independent_variables]
@@ -88,38 +114,24 @@ def theorist_on_state(experiment_data, variables):
     return Delta(models_lr=[theorist_lr.fit(x, y)], models_polyr=[theorist_polyr.fit(x, y)])
 
 
-# ** Experimentalist ** #
-# Here, we use a random pool and use the wrapper to create a on state function
-# Note: The argument num_samples is not a state field. Instead, we will pass it in when calling
-# the function
-
-
-@on_state()
-def experimentalist_on_state(variables, num_samples, experimentalist=pool):
-    return Delta(conditions=experimentalist(variables, num_samples))
-
-
 # Again, we need to wrap the runner to use it on the state. Here, we send the raw conditions.
 @on_state()
 def runner_on_state(conditions, experiment_runner: callable):
     # Here, we convert conditions into sweet bean code to send the complete experiment code
     # directly to the server
 
-    coherence_ratios_list = list(conditions["coherence_ratio"])
-    motion_directions_list = list(conditions["motion_direction"])
+    # get the conditions from the state
+    # ensure there are no duplicates in the factors
+    coherence_ratios_list = list(set(conditions["coherence_ratio"]))
+    motion_directions_list = list(set(conditions["motion_direction"]))
     conditions_to_send = conditions.copy()
-
-    # global training_seq
-    # experiment_timeline = trial_sequences(coherence_ratios_list, motion_directions_list, all_items_in_one_trial=True)[0]
-    # js_code = stimulus_sequence(experiment_timeline, training_timeline=training_seq, to_html=False)
-
+    # construct the experiment sequence and the training sequence
     experiment_seq = trial_sequences(
-        coherence_ratios=[100, 50, 0],
-        motion_directions=[0, 90, 180, 270],
+        coherence_ratios=coherence_ratios_list,
+        motion_directions=motion_directions_list,
         num_repetitions=2,
         sequence_type="target",
     )
-
     training_seq = trial_sequences(
         coherence_ratios=[90, 10],
         motion_directions=[45],
@@ -127,125 +139,32 @@ def runner_on_state(conditions, experiment_runner: callable):
         sequence_type="training",
     )
 
-    print("len training sequence: ", len(training_seq[0]))
-    print("len experiment sequence: ", len(experiment_seq[0]))
-
-    # display(pd.DataFrame(experiment_seq[0]).head())
-    # display(pd.DataFrame(training_seq[0]).head())
-
+    # get the experiment code
     js_code = stimulus_sequence(experiment_seq[0], training_seq[0], to_html=False)
     conditions_to_send["experiment_code"] = js_code
 
-    # dev
-    data_raw = experiment_runner()  # returns observations for each condition as jsPsych data
-    print("## got raw data ##")
-    print("data lenght", len(data_raw))
-    print("data type", type(data_raw), "type of first element", type(data_raw[0]))
-    # print("data_raw[0]", data_raw[0])
+    # get the raw experiment data
+    data_raw = experiment_runner(conditions_to_send)  # returns observations for each condition as jsPsych data
 
     # process the experiment data
     experiment_data = pd.DataFrame()
     _df = trial_list_to_experiment_data(data_raw)
     experiment_data = pd.concat([experiment_data, _df], axis=0)
-    print("processed experiment_data (head):")
-    display(experiment_data.head())
+    # print("processed experiment_data (head):")
+    # display(experiment_data.head())
     return Delta(experiment_data=experiment_data)
 
 
-def trial_list_to_experiment_data(trial_sequence):
-    """
-    Parse a trial sequence (from jsPsych) into dependent and independent variables
-    independent: coherence_ratio, motion_direction
-    dependent: d_prime
-    """
-    trial_sequence = pd.DataFrame(trial_sequence).fillna(pd.NA)
-    display(trial_sequence.head())
-
-    # target cleaned up data:
-    # index(actual trial index), coherence_ratio, motion_direction, response, bean_correct_key
-    # inference: hit, miss, d_prime
-    # final: index(actual trial index), coherence_ratio, motion_direction, d_prime
-
-    # get all rok trials
-    rok_trials = trial_sequence[trial_sequence["trial_type"] == "rok"]
-    # get only relevant columns
-    rok_trials = rok_trials.loc[:, ["bean_text", "coherence_movement", "coherent_movement_direction"]]
-    rok_trials = rok_trials.rename(
-        columns={
-            "bean_text": "type",
-            "coherence_movement": "coherence_ratio",
-            "coherent_movement_direction": "motion_direction",
-        }
-    )
-    # get rid of duplicated information (each 8 rows are one actual trial)
-    rok_trials = rok_trials.reset_index(drop=True)
-    rok_trials = rok_trials[::8]
-    rok_trials = rok_trials.reset_index(drop=True)
-    display(rok_trials)
-
-    # get all responses trails
-    # all the html-keyboard-response where bean_correct_key in not null or empty or NA / NaN
-    response_trials = trial_sequence[
-        (trial_sequence["trial_type"] == "html-keyboard-response") & (trial_sequence["bean_correct_key"].notna())
-    ]
-
-    # get only relevant columns
-    response_trials = response_trials.loc[:, ["response", "bean_correct_key"]]
-    response_trials = response_trials.rename(columns={"bean_correct_key": "correct_response"})
-    # put each 2 response trials after each others into one row
-    # pair the responses
-    responses = response_trials["response"].values.reshape(-1, 2).tolist()
-    # make sure responses are floats
-    responses = [[float(r) for r in response] for response in responses]
-    # get rid of the duplicates
-    response_trials = response_trials[::2]
-    response_trials["response"] = responses
-    # convert correct_response from a string list "[1,2]" to a list [1,2]
-    response_trials["correct_response"] = response_trials["correct_response"].apply(lambda x: json.loads(x))
-    response_trials = response_trials.reset_index(drop=True)
-    display(response_trials)
-
-    # merge the two dataframes
-    trials = pd.concat([rok_trials, response_trials], axis=1)
-
-    # infer the hit and miss per trial
-    # hit: number of elements in the
-    # miss: number of elements in the correct_response that are not in the response
-    def num_hits(array_1, array_2):
-        sorted_array_1 = np.sort(array_1)
-        sorted_array_2 = np.sort(array_2)
-        return np.sum(sorted_array_1 == sorted_array_2)
-
-    def num_misses(array_1, array_2):
-        sorted_array_1 = np.sort(array_1)
-        sorted_array_2 = np.sort(array_2)
-        return np.sum(sorted_array_1 != sorted_array_2)
-
-    trials["hit"] = trials.apply(lambda x: num_hits(x["response"], x["correct_response"]), axis=1)
-    trials["miss"] = trials.apply(lambda x: num_misses(x["response"], x["correct_response"]), axis=1)
-    display(trials)
-
-    # get only target trials (type: "target")
-    trials = trials[trials["type"] == "target"]
-
-    # group the trails on condition (coherence_ratio, motion_direction)
-    trials_grouped = trials.groupby(["coherence_ratio", "motion_direction"]).agg({"hit": "sum", "miss": "sum"})
-    # calculate d_prime
-    # d_prime: d_prime(hit, miss)
-    # where hit and misses are aggregated over all trials with the same conditions
-    trials_grouped["d_prime"] = trials_grouped.apply(lambda x: d_prime(x["hit"], x["miss"]), axis=1)
-    trials_grouped = trials_grouped.reset_index()
-    display(trials_grouped)
-
-    # select only the experiment data columns (drop hit and miss and type)
-    trials_grouped = trials_grouped.loc[:, ["coherence_ratio", "motion_direction", "d_prime"]]
-    display(trials_grouped)
-    return trials_grouped
-
-
+# to get the all the conditions in the condition space
 @on_state()
 def grid_pool_on_state(variables):
     return Delta(conditions=grid_pool(variables))
+
+
+# ** Experimentalist ** #
+@on_state()
+def experimentalist_on_state(variables, num_samples, experimentalist=pool):
+    return Delta(conditions=experimentalist(variables, num_samples))
 
 
 @on_state()
@@ -349,33 +268,102 @@ def costume_experimentalist_on_state(
     return Delta(conditions=new_conditions)
 
 
-from autora.state import State
-from dataclasses import dataclass, field
-from typing import Optional, List
-from sklearn.base import BaseEstimator
+# region data_processing
+def trial_list_to_experiment_data(trial_sequence):
+    """
+    Parse a trial sequence (from jsPsych) into dependent and independent variables
+    independent: coherence_ratio, motion_direction
+    dependent: d_prime
+    """
+    trial_sequence = pd.DataFrame(trial_sequence).fillna(pd.NA)
+    # display(trial_sequence.head())
 
+    # target cleaned up data:
+    # index(actual trial index), coherence_ratio, motion_direction, response, bean_correct_key
+    # inference: hit, miss, d_prime
+    # final: index(actual trial index), coherence_ratio, motion_direction, d_prime
 
-@dataclass(frozen=True)
-class CustomState(State):
-    variables: Optional[VariableCollection] = field(default=None, metadata={"delta": "replace"})
-    conditions: Optional[pd.DataFrame] = field(default=None, metadata={"delta": "replace", "converter": pd.DataFrame})
-    experiment_data: Optional[pd.DataFrame] = field(
-        default=None, metadata={"delta": "extend", "converter": pd.DataFrame}
+    # get all rok trials
+    rok_trials = trial_sequence[trial_sequence["trial_type"] == "rok"]
+    # get only relevant columns
+    rok_trials = rok_trials.loc[:, ["bean_text", "coherence_movement", "coherent_movement_direction"]]
+    rok_trials = rok_trials.rename(
+        columns={
+            "bean_text": "type",
+            "coherence_movement": "coherence_ratio",
+            "coherent_movement_direction": "motion_direction",
+        }
     )
-    models_lr: List[BaseEstimator] = field(
-        default_factory=list,
-        metadata={"delta": "extend"},
-    )
-    models_polyr: List[BaseEstimator] = field(
-        default_factory=list,
-        metadata={"delta": "extend"},
-    )
+    # get rid of duplicated information (each 8 rows are one actual trial)
+    rok_trials = rok_trials.reset_index(drop=True)
+    rok_trials = rok_trials[::8]
+    rok_trials = rok_trials.reset_index(drop=True)
+    # display(rok_trials)
+
+    # get all responses trails
+    # all the html-keyboard-response where bean_correct_key in not null or empty or NA / NaN
+    response_trials = trial_sequence[
+        (trial_sequence["trial_type"] == "html-keyboard-response") & (trial_sequence["bean_correct_key"].notna())
+    ]
+
+    # get only relevant columns
+    response_trials = response_trials.loc[:, ["response", "bean_correct_key"]]
+    response_trials = response_trials.rename(columns={"bean_correct_key": "correct_response"})
+    # put each 2 response trials after each others into one row
+    # pair the responses
+    responses = response_trials["response"].values.reshape(-1, 2).tolist()
+    # make sure responses are floats
+    responses = [[float(r) for r in response] for response in responses]
+    # get rid of the duplicates
+    response_trials = response_trials[::2]
+    response_trials["response"] = responses
+    # convert correct_response from a string list "[1,2]" to a list [1,2]
+    response_trials["correct_response"] = response_trials["correct_response"].apply(lambda x: json.loads(x))
+    response_trials = response_trials.reset_index(drop=True)
+    # display(response_trials)
+
+    # merge the two dataframes
+    trials = pd.concat([rok_trials, response_trials], axis=1)
+
+    # infer the hit and miss per trial
+    # hit: number of elements in the
+    # miss: number of elements in the correct_response that are not in the response
+    def num_hits(array_1, array_2):
+        sorted_array_1 = np.sort(array_1)
+        sorted_array_2 = np.sort(array_2)
+        return np.sum(sorted_array_1 == sorted_array_2)
+
+    def num_misses(array_1, array_2):
+        sorted_array_1 = np.sort(array_1)
+        sorted_array_2 = np.sort(array_2)
+        return np.sum(sorted_array_1 != sorted_array_2)
+
+    trials["hit"] = trials.apply(lambda x: num_hits(x["response"], x["correct_response"]), axis=1)
+    trials["miss"] = trials.apply(lambda x: num_misses(x["response"], x["correct_response"]), axis=1)
+    # display(trials)
+
+    # get only target trials (type: "target")
+    trials = trials[trials["type"] == "target"]
+
+    # group the trails on condition (coherence_ratio, motion_direction)
+    trials_grouped = trials.groupby(["coherence_ratio", "motion_direction"]).agg({"hit": "sum", "miss": "sum"})
+    # calculate d_prime
+    # d_prime: d_prime(hit, miss)
+    # where hit and misses are aggregated over all trials with the same conditions
+    trials_grouped["d_prime"] = trials_grouped.apply(lambda x: d_prime(x["hit"], x["miss"]), axis=1)
+    trials_grouped = trials_grouped.reset_index()
+    # display(trials_grouped)
+
+    # select only the experiment data columns (drop hit and miss and type)
+    trials_grouped = trials_grouped.loc[:, ["coherence_ratio", "motion_direction", "d_prime"]]
+    # display(trials_grouped)
+    return trials_grouped
 
 
+# region validation
 # *** Report the data *** #
-
-
 def get_validation_MSE(validation_experiment_data, working_state):
+    # get the MSE of both models on the validation data
     ivs = [iv.name for iv in validation_experiment_data.variables.independent_variables]
     dvs = [dv.name for dv in validation_experiment_data.variables.dependent_variables]
     X = validation_experiment_data.experiment_data[ivs]
@@ -402,26 +390,44 @@ def get_validation_MSE(validation_experiment_data, working_state):
     return validation_MSE
 
 
+from autora.state import State
+from dataclasses import dataclass, field
+from typing import Optional, List
+from sklearn.base import BaseEstimator
+
+
+@dataclass(frozen=True)
+class CustomState(State):
+    variables: Optional[VariableCollection] = field(default=None, metadata={"delta": "replace"})
+    conditions: Optional[pd.DataFrame] = field(default=None, metadata={"delta": "replace", "converter": pd.DataFrame})
+    experiment_data: Optional[pd.DataFrame] = field(
+        default=None, metadata={"delta": "extend", "converter": pd.DataFrame}
+    )
+    models_lr: List[BaseEstimator] = field(
+        default_factory=list,
+        metadata={"delta": "extend"},
+    )
+    models_polyr: List[BaseEstimator] = field(
+        default_factory=list,
+        metadata={"delta": "extend"},
+    )
+
+
+# region main
 if __name__ == "__main__":
 
-    # run_experiment_once()
-    # to run the experiment once localy and download the data
-    # -> either uncomment the above line
-    # OR
-    # -> run it from terminal
-    # python
-    # >>> from autora_workflow import run_experiment_once
-    # >>> run_experiment_once()
-
     # *** Set up variables *** #
-    # independent variable is coherence in percent (0 - 100)
-    # dependent variable is rt in ms (0 - 10000)
+    # independent variable:
+    #           coherence_ratio (0 - 100)
+    #           motion_direction (0 - 360)
+    # dependent variable:
+    #           is d_prime (-10000 - 10000)
     variables = VariableCollection(
         independent_variables=[
             Variable(name="coherence_ratio", allowed_values=np.linspace(0, 100, 100), value_range=(0, 100)),
             Variable(name="motion_direction", allowed_values=np.linspace(0, 360, 360), value_range=(0, 360)),
         ],
-        dependent_variables=[Variable(name="d_prime", value_range=(0, 10000))],
+        dependent_variables=[Variable(name="d_prime", value_range=(-10000, 10000))],
     )
 
     # *** State *** #
@@ -432,14 +438,12 @@ if __name__ == "__main__":
     validation_conditions = grid_pool_on_state(state)
 
     # *** experiment runner *** #
-    # (https://console.firebase.google.com/)
-    #   -> project -> project settings -> service accounts -> generate new private key
-    firebase_credentials = {}
-
-    # simple experiment runner that runs the experiment on firebase
-    # experiment_runner = firebase_runner(firebase_credentials=firebase_credentials, time_out=100, sleep_time=5)
-    # DEV
-    experiment_runner = psudo_experiment_runner
+    if LOCAL:
+        # for testing purposes, we use a pseudo experiment runner that loads data from a csv file
+        experiment_runner = psudo_experiment_runner
+    else:
+        # simple experiment runner that runs the experiment on firebase
+        experiment_runner = firebase_runner(firebase_credentials=FIREBASE_CREDENTIALS, time_out=100, sleep_time=5)
 
     # Now, we can run our components
     # this is the cycle!
@@ -450,21 +454,22 @@ if __name__ == "__main__":
     # theorests: [LinearRegression, PolynomialRegressor]
     # Experimentalist: adaptable_sample (with novelty, model_disagreement, confirmation)
 
-    # Collect 'num_samples' conditions per iteration
-    num_samples = 2
-    iterations = 3
-    for i in range(iterations):
+    for i in range(NUM_ITERATIONS):
         print(f"## Iteration {i} ##")
 
-        if i == 0:  # in the first iteration, sample randomly from the condition space
-            state = experimentalist_on_state(state, num_samples=num_samples, experimentalist=pool)
+        if i == 0:  # in the first iteration, either sample randomly or use eduacated guess
+            # sample randomly
+            # state = experimentalist_on_state(state, num_samples=NUM_SAMPLES, experimentalist=pool)
+            # set the conditions in the state to INITIAL_CONDITIONS
+            state = state.update(conditions=INITIAL_CONDITIONS)
+
         else:  # for the rest, use the costume experimentalist
             state = costume_experimentalist_on_state(
                 state,
-                num_samples=num_samples,
+                num_samples=NUM_SAMPLES,
                 all_conditions=validation_conditions.conditions,
                 cycle=i,
-                max_cycle=iterations,
+                max_cycle=NUM_ITERATIONS,
             )
         print("## experimentalist done - ", i)
         state = runner_on_state(state, experiment_runner=experiment_runner)
