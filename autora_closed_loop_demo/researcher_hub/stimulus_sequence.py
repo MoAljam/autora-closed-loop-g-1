@@ -10,7 +10,6 @@ from sweetbean.stimulus import (
 )
 from utils import rdp_rsvp_stimulus, Experiment
 
-
 def stimulus_sequence(experiment_timeline, training_timeline, to_html=False):
     coherence_ratio = TimelineVariable("coherence_ratio", [])
     motion_direction = TimelineVariable("motion_direction", [])
@@ -238,5 +237,5 @@ def stimulus_sequence(experiment_timeline, training_timeline, to_html=False):
 
     if to_html:
         return experiment.to_html("test_experiment.html")
-
+        
     return experiment.to_js_string(as_function=True, is_async=True)
