@@ -129,7 +129,7 @@ def runner_on_state(conditions, experiment_runner: callable):
     experiment_seq = trial_sequences(
         coherence_ratios=coherence_ratios_list,
         motion_directions=motion_directions_list,
-        num_repetitions=2,
+        num_repetitions=8,
         sequence_type="target",
     )
     training_seq = trial_sequences(

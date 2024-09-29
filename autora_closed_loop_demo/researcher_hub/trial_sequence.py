@@ -90,7 +90,7 @@ def trial_sequences(
     motion_directions: list,
     sequence_type="target",
     all_items_in_one_trial=True,
-    num_repetitions=5,
+    num_repetitions=8,
 ):
 
     coherence_ratio = Factor("coherence_ratio", coherence_ratios)
@@ -98,7 +98,7 @@ def trial_sequences(
     repetition = Factor("repetetion", list(range(1, num_repetitions + 1)))
 
     # used in case of repeating the items of each trial
-    _num = Factor("_num", list(range(1, 9)))
+    _num = Factor("_num", list(range(1, num_repetitions + 1)))
 
     # design = [coherence_ratio, motion_direction, repetetion, *items]
     design = [coherence_ratio, motion_direction, repetition]
